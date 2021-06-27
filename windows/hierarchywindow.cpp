@@ -3,8 +3,8 @@
 HierarchyWindow::HierarchyWindow() : Window("Hierarchy", 0, 0, 150, 200)
 {
     this->flags() = ImGuiWindowFlags_AlwaysVerticalScrollbar |
-                    ImGuiWindowFlags_NoCollapse |
-                    ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoCollapse |
+            ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoMove;
 }
 
@@ -21,17 +21,22 @@ void HierarchyWindow::desenhar()
     ImGui::SetWindowPos(ImVec2(glutGet(GLUT_WINDOW_WIDTH) -  this->size().x, 19));
     ImGui::SetWindowSize(this->size());
 
-    static const char* listbox_items[255];
-    static int listbox_item_current = -1;
+    static bool selection[255] = {false};
+    static size_t itemSelected = -1;
 
     for(size_t i = 0; i < this->m_objetos.size(); i++){
-        listbox_items[i] = this->m_objetos[i]->nome().c_str();
-        std::cout << listbox_items[i] << std::endl;
+        if(ImGui::Selectable(std::string(std::to_string(i)).append(" ").append(this->m_objetos[i]->nome()).c_str(), &selection[i])){
+            itemSelected = i;
+        }
+        if(itemSelected == i)
+            this->m_objetos[i]->selecionado = true;
+        else
+            this->m_objetos[i]->selecionado = false;
+
     }
 
-
-    ImGui::ListBox("", &listbox_item_current, listbox_items, this->m_objetos.size(), 10);
-    memset(listbox_items, 0, 255);
+    memset(selection, false, 255);
+    selection[itemSelected] = true;
 
     ImGui::End();
 }
