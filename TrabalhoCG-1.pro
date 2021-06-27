@@ -28,7 +28,12 @@ SOURCES += main.cpp \
     imgui/imgui_draw.cpp \
     imgui/imgui_widgets.cpp \
     imgui/examples/imgui_impl_glut.cpp \
-    imgui/examples/imgui_impl_opengl2.cpp
+    imgui/examples/imgui_impl_opengl2.cpp \
+    windows/assetswindow.cpp \
+    windows/hierarchywindow.cpp \
+    windows/keyinputwindow.cpp \
+    windows/menubarwindow.cpp \
+    windows/window.cpp
 
 
 HEADERS += \
@@ -49,5 +54,10 @@ HEADERS += \
     imgui/imgui_demo.h \
     imgui/imgui_draw.h \
     imgui/imgui_widgets.h \
-    imgui/examples/imgui_impl_glut.h
+    imgui/examples/imgui_impl_glut.h \
+    windows/assetswindow.h \
+    windows/hierarchywindow.h \
+    windows/keyinputwindow.h \
+    windows/menubarwindow.h \
+    windows/window.h
     imgui/examples/imgui_impl_opengl2.h

@@ -16,6 +16,11 @@ using namespace std;
 #include <carro.h>
 #include <novoobjeto.h>
 
+//Windows
+#include "windows/menubarwindow.h"
+#include "windows/keyinputwindow.h"
+#include "windows/hierarchywindow.h"
+
 //Model3DS model3ds("../3ds/cartest.3DS");
 
 vector<Objeto*> objetos;
@@ -26,46 +31,30 @@ static bool show_demo_window = false;
 static bool show_another_window = false;
 static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+KeyInputWindow inputWindow;
+HierarchyWindow hierarchyWindow;
+MenuBarWindow menubar;
+
 void imgui_display()
 {
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (show_demo_window)
         ImGui::ShowDemoWindow(&show_demo_window);
 
-    if (ImGui::BeginMainMenuBar())
-    {
-        if (ImGui::BeginMenu("File"))
-        {
-            //ShowExampleMenuFile();
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Edit"))
-        {
-            if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-            ImGui::Separator();
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-            ImGui::EndMenu();
-        }
-        ImGui::EndMainMenuBar();
-    }
+
+    menubar.desenhar();
+    inputWindow.desenhar();
+    hierarchyWindow.desenhar();
+
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
     {
         static float f = 0.0f;
         static int counter = 0;
 
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigWindowsMoveFromTitleBarOnly = true;
-
         ImGui::Begin("Stats", NULL);
-        ImGui::SetWindowSize(ImVec2(glutGet(GLUT_WINDOW_WIDTH), 200));
-        ImGui::SetWindowPos(ImVec2(0, glutGet(GLUT_WINDOW_HEIGHT) - ImGui::GetWindowHeight()));
 
         ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
         ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        ImGui::Checkbox("Another Window", &show_another_window);
 
         ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
         ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
@@ -191,6 +180,8 @@ void teclado(unsigned char key, int x, int y) {
     //if (!incluirObjeto) {
         GUI::keyInit(key,x,y);
     //}
+
+    inputWindow.key() = key;
 
     switch (key) {
     case 't':
