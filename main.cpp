@@ -23,24 +23,24 @@ using namespace std;
 
 //Model3DS model3ds("../3ds/cartest.3DS");
 
-vector<Objeto*> objetos;
+
 int posSelecionado = -1;
 
 // Our state
 static bool show_demo_window = false;
-static bool show_another_window = false;
 static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 KeyInputWindow inputWindow;
 HierarchyWindow hierarchyWindow;
 MenuBarWindow menubar;
 
+vector<Objeto*> &objetos = hierarchyWindow.objetos();
+
 void imgui_display()
 {
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (show_demo_window)
         ImGui::ShowDemoWindow(&show_demo_window);
-
 
     menubar.desenhar();
     inputWindow.desenhar();
@@ -102,7 +102,7 @@ void displayInner() {
     GUI::setColor(1,0,0);
     GUI::drawFloor();
 
-    for (int i = 0; i < objetos.size(); ++i) {
+    for (size_t i = 0; i < objetos.size(); ++i) {
         glPushMatrix();
             objetos[i]->desenha();
         glPopMatrix();
@@ -220,7 +220,7 @@ void teclado(unsigned char key, int x, int y) {
         break;
     case 'p':
         if (incluirObjeto) {
-            objetos.push_back( new Personagem() );
+            objetos.push_back( new Personagem("Player") );
         }
         break;
     case 'c':
@@ -261,7 +261,5 @@ void teclado(unsigned char key, int x, int y) {
 
 int main()
 {
-    cout << "Hello World!" << endl;
-
     GUI gui = GUI(800,600,desenha,teclado);
 }

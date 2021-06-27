@@ -1,6 +1,6 @@
 #include "personagem.h"
 
-Personagem::Personagem()
+Personagem::Personagem(std::string objNome) : Objeto(objNome)
 {
 
 }

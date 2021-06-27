@@ -1,6 +1,6 @@
 #include "objeto.h"
 
-Objeto::Objeto()
+Objeto::Objeto(string name) : m_nome(name)
 {
 
 }
@@ -14,4 +14,9 @@ void Objeto::desenha()
     glRotatef(a.x,1,0,0);  // /
     GUI::drawOrigin(1);
     glScalef(s.x,s.y,s.z); //transformacao (matriz) mais a direita (mais local)
+}
+
+string Objeto::nome()
+{
+    return this->m_nome;
 }

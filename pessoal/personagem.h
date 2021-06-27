@@ -6,7 +6,7 @@
 class Personagem : public Objeto
 {
 public:
-    Personagem();
+    Personagem(std::string objNome = "");
 
     void desenha();
 };

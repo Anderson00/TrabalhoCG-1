@@ -2,7 +2,7 @@
 
 Carro::Carro()
 {
-    model = new Model3DS("../3ds/cartest.3DS");
+    model = new Model3DS("3ds/cartest.3DS");
 }
 
 void Carro::desenha()
