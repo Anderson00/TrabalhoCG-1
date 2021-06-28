@@ -4,6 +4,7 @@ using namespace std;
 
 //#include <gui.h>
 #include <vector>
+#include <QApplication>
 
 //imgui includes
 #include "imgui/imgui.h"
@@ -259,7 +260,9 @@ void teclado(unsigned char key, int x, int y) {
     }
 }
 
-int main()
+int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     GUI gui = GUI(800,600,desenha,teclado);
+    app.exec();
 }

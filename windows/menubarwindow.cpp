@@ -1,4 +1,6 @@
 #include "menubarwindow.h"
+#include <QMainWindow>
+#include <QFileDialog>
 
 MenuBarWindow::MenuBarWindow() : Window("")
 {
@@ -31,6 +33,6 @@ void MenuBarWindow::desenhar()
 void MenuBarWindow::setFileMenu()
 {
     if (ImGui::MenuItem("Open", "CTRL+O")) {
-        std::cout << "OPEEN";
+        QFileDialog::getOpenFileName(nullptr, "Abrir", "./", "Image Files (*.cfg)");
     }
 }
