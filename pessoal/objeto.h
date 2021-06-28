@@ -15,8 +15,10 @@ public:
     virtual void desenha();
 
     std::string nome();
+    bool &drawGizmo();
 private:
     std::string m_nome;
+    bool m_drawGizmo = false;
 };
 
 #endif // OBJETO_H

@@ -24,7 +24,6 @@ using namespace std;
 //Model3DS model3ds("../3ds/cartest.3DS");
 
 
-int posSelecionado = -1;
 
 // Our state
 static bool show_demo_window = false;
@@ -35,6 +34,7 @@ HierarchyWindow hierarchyWindow;
 MenuBarWindow menubar;
 
 vector<Objeto*> &objetos = hierarchyWindow.objetos();
+int &posSelecionado = hierarchyWindow.itemIndiceSelected();
 
 void imgui_display()
 {
@@ -125,12 +125,12 @@ void desenha() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-
-
     gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
     //gluLookAt(0,15,0, 0,0,0, 1,0,0);
     displayInner();
 
+    GUI::setColor(clear_color.x, clear_color.y, clear_color.z, 1);
+    GUI::drawSphere(1, 1, 0, 0.5);
 
     if (!objetos.empty()) {
         glLoadIdentity();
@@ -185,21 +185,21 @@ void teclado(unsigned char key, int x, int y) {
 
     switch (key) {
     case 't':
-        glutGUI::trans_obj = !glutGUI::trans_obj;
+        inputWindow.inTranslateMode() = glutGUI::trans_obj = !glutGUI::trans_obj;
         break;
     case 'l':
         glutGUI::trans_luz = !glutGUI::trans_luz;
         break;
 
     case 'n':
-        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
-            objetos[posSelecionado]->selecionado = false;
-        }
-        posSelecionado++;
-        posSelecionado = posSelecionado%objetos.size();
-        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
-            objetos[posSelecionado]->selecionado = true;
-        }
+//        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+//            objetos[posSelecionado]->selecionado = false;
+//        }
+//        posSelecionado++;
+//        posSelecionado = posSelecionado%objetos.size();
+//        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+//            objetos[posSelecionado]->selecionado = true;
+//        }
         break;
     case 'b':
         if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
@@ -216,7 +216,7 @@ void teclado(unsigned char key, int x, int y) {
 
 
     case 'O':
-        incluirObjeto = !incluirObjeto;
+        inputWindow.inInsertionMode() = incluirObjeto = !incluirObjeto;
         break;
     case 'p':
         if (incluirObjeto) {

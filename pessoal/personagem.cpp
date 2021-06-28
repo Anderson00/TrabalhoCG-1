@@ -23,7 +23,7 @@ void Personagem::desenha()
             GUI::drawOrigin(0.5);
             //modelo
             if (selecionado) {
-                GUI::setColor(1,0,0);
+                GUI::drawBox(-1,0,-1, 1,2,1, true);
             } else {
                 GUI::setColor(0,0,1);
             }

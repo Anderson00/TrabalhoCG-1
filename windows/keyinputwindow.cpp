@@ -26,6 +26,15 @@ void KeyInputWindow::desenhar()
     ImGui::Text("Pressed: %d %.2f", io.MouseDown[0], (io.MouseDownDuration[0] >= 0)? io.MouseDownDuration[0] : 0);
     ImGui::Text("X:%.2f, Y:%.2f", io.MousePos.x, io.MousePos.y);
     ImGui::Text("Last key: %c", this->m_key);
+    ImGui::Separator();
+
+    ImGui::Checkbox("Insertion", &this->m_inInsertionMode);
+    ImGui::SameLine();
+    ImGui::Checkbox("Translate", &this->m_inTranslateMode);
+
+    ImGui::Checkbox("Rotate", &this->m_inRotationMode);
+    ImGui::SameLine(102);
+    ImGui::Checkbox("Scale", &this->m_inScaleMode);
 
     ImGui::End();
 }
@@ -33,4 +42,24 @@ void KeyInputWindow::desenhar()
 unsigned int &KeyInputWindow::key()
 {
     return this->m_key;
+}
+
+bool &KeyInputWindow::inInsertionMode()
+{
+    return this->m_inInsertionMode;
+}
+
+bool &KeyInputWindow::inTranslateMode()
+{
+    return this->m_inTranslateMode;
+}
+
+bool &KeyInputWindow::inRotationMode()
+{
+    return this->m_inRotationMode;
+}
+
+bool &KeyInputWindow::inScaleMode()
+{
+    return this->m_inScaleMode;
 }

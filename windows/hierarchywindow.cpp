@@ -22,13 +22,12 @@ void HierarchyWindow::desenhar()
     ImGui::SetWindowSize(this->size());
 
     static bool selection[255] = {false};
-    static size_t itemSelected = -1;
 
     for(size_t i = 0; i < this->m_objetos.size(); i++){
         if(ImGui::Selectable(std::string(std::to_string(i)).append(" ").append(this->m_objetos[i]->nome()).c_str(), &selection[i])){
-            itemSelected = i;
+            m_itemIndiceSelected = i;
         }
-        if(itemSelected == i)
+        if(m_itemIndiceSelected == i)
             this->m_objetos[i]->selecionado = true;
         else
             this->m_objetos[i]->selecionado = false;
@@ -36,7 +35,7 @@ void HierarchyWindow::desenhar()
     }
 
     memset(selection, false, 255);
-    selection[itemSelected] = true;
+    selection[m_itemIndiceSelected] = true;
 
     ImGui::End();
 }
@@ -44,6 +43,11 @@ void HierarchyWindow::desenhar()
 std::vector<Objeto *> &HierarchyWindow::objetos()
 {
     return this->m_objetos;
+}
+
+int &HierarchyWindow::itemIndiceSelected()
+{
+    return this->m_itemIndiceSelected;
 }
 
 void HierarchyWindow::addObjeto(Objeto *obj)

@@ -12,11 +12,16 @@ void Objeto::desenha()
     glRotatef(a.z,0,0,1);  // \ .
     glRotatef(a.y,0,1,0);  //  | Rz.Ry.Rx . v
     glRotatef(a.x,1,0,0);  // /
-    GUI::drawOrigin(1);
+    GUI::drawOrigin(1*this->m_drawGizmo);
     glScalef(s.x,s.y,s.z); //transformacao (matriz) mais a direita (mais local)
 }
 
 string Objeto::nome()
 {
     return this->m_nome;
+}
+
+bool &Objeto::drawGizmo()
+{
+    return this->m_drawGizmo;
 }

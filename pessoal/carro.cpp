@@ -14,7 +14,7 @@ void Carro::desenha()
 
         if (selecionado) {
             //glEnable(GL_CULL_FACE);
-            GUI::setColor(0.5,0.5,0.5);
+            //GUI::setColor(0.5,0.5,0.5);
             GUI::drawBox(-1,-1,-1, 1,1,1, true);
 
             GUI::setColor(1.0,1.0,1.0);

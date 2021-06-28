@@ -13,6 +13,7 @@ public:
 
     void desenhar() override;
     std::vector<Objeto *> &objetos();
+    int &itemIndiceSelected();
 
     void addObjeto(Objeto *obj);
     void removeObjeto(Objeto *obj);
@@ -20,6 +21,7 @@ public:
 
 private:
     std::vector<Objeto*> m_objetos;
+    int m_itemIndiceSelected = -1;
 };
 
 #endif // HIERARCHYWINDOW_H
