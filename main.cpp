@@ -289,6 +289,9 @@ int main(int argc, char **argv)
     assetsWindow.inspectWindow(&inspectWindow);
     assetsWindow.fileController(&controller);
 
+    menubar.fileController(&controller);
+    menubar.hierarchyWindow(&hierarchyWindow);
+
     QApplication app(argc, argv);
     GUI gui = GUI(800,600,desenha,teclado);
     app.exec();

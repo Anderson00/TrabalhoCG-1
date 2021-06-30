@@ -1,6 +1,6 @@
 #include "carro.h"
 
-Carro::Carro() : Objeto("Carro")
+Carro::Carro() : Objeto("Carro", "3ds")
 {
     model = new Model3DS("3ds/cartest.3DS");
 }

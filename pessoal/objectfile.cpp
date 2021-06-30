@@ -1,6 +1,6 @@
 #include "objectfile.h"
 
-ObjectFile::ObjectFile(std::string fileDir)
+ObjectFile::ObjectFile(std::string fileDir) : Objeto("<Object File>", "3ds"), fileDir(fileDir)
 {
     this->m_model = new Model3DS(fileDir.c_str());
 }
@@ -34,4 +34,9 @@ Model3DS *ObjectFile::model(Model3DS *model)
 {
     m_model = model;
     return m_model;
+}
+
+string ObjectFile::fileName()
+{
+    return this->fileDir;
 }

@@ -13,11 +13,13 @@ public:
 
     void desenhar() override;
     std::vector<Objeto *> &objetos();
+    void replaceObjetos(std::vector<Objeto *> objetos);
     int &itemIndiceSelected();
 
     void addObjeto(Objeto *obj);
     void removeObjeto(Objeto *obj);
     void removeObjeto(size_t indice);
+    void clearAll();
 
 private:
     std::vector<Objeto*> m_objetos;

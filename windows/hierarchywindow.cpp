@@ -45,6 +45,12 @@ std::vector<Objeto *> &HierarchyWindow::objetos()
     return this->m_objetos;
 }
 
+void HierarchyWindow::replaceObjetos(std::vector<Objeto *> objetos)
+{
+    this->clearAll();
+    this->m_objetos = objetos;
+}
+
 int &HierarchyWindow::itemIndiceSelected()
 {
     return this->m_itemIndiceSelected;
@@ -77,4 +83,14 @@ void HierarchyWindow::removeObjeto(size_t indice)
 
         this->m_objetos.erase(this->m_objetos.begin()+indice);
     }
+}
+
+void HierarchyWindow::clearAll()
+{
+    for(Objeto *obj : this->m_objetos){
+        delete obj;
+    }
+
+    this->m_objetos.clear();
+    this->m_itemIndiceSelected = -1;
 }

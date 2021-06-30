@@ -11,14 +11,16 @@ public:
     Vetor3D s = Vetor3D(1,1,1);
     bool selecionado = false;
 
-    Objeto(std::string nome = "<sem nome>");
+    Objeto(std::string nome = "<sem nome>", std::string instance = "primitivo");
     virtual void desenha();
 
     std::string &nome();
     bool &drawGizmo();
+    std::string instance();
 private:
     std::string m_nome;
     bool m_drawGizmo = false;
+    std::string m_instance;
 };
 
 #endif // OBJETO_H

@@ -1,6 +1,6 @@
 #include "objeto.h"
 
-Objeto::Objeto(string name) : m_nome(name)
+Objeto::Objeto(string name, std::string instance) : m_nome(name), m_instance(instance)
 {
 
 }
@@ -24,4 +24,9 @@ string& Objeto::nome()
 bool &Objeto::drawGizmo()
 {
     return this->m_drawGizmo;
+}
+
+string Objeto::instance()
+{
+    return this->m_instance;
 }

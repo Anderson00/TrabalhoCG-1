@@ -41,17 +41,44 @@ void AssetsWindow::desenhar()
 
             ImGui::EndTabItem();
         }
+        if (ImGui::BeginTabItem("Primitives"))
+        {
+
+            ImVec2 button_sz(100, 40);
+            ImGuiStyle& style = ImGui::GetStyle();
+            std::vector<std::string> files({
+                                               "Box", "Square", "Sphere", "Floor"
+                                           });
+            float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+            for (int n = 0; n < files.size(); n++)
+            {
+                ImGui::PushID(n);
+                if(ImGui::Button(files[n].c_str(), button_sz)){
+
+                }
+                float last_button_x2 = ImGui::GetItemRectMax().x;
+                float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+                if (n + 1 < files.size() && next_button_x2 < window_visible_x2)
+                    ImGui::SameLine();
+                ImGui::PopID();
+            }
+
+
+            ImGui::EndTabItem();
+        }
         if (ImGui::BeginTabItem("Scenes"))
         {
 
             ImVec2 button_sz(100, 40);
             ImGuiStyle& style = ImGui::GetStyle();
-            std::vector<std::string> files = this->m_fileController->assets3DSFileNames();
+            std::vector<std::string> files = this->m_fileController->scenesFileNames();
             float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
             for (int n = 0; n < files.size(); n++)
             {
                 ImGui::PushID(n);
-                ImGui::Button(files[n].c_str(), button_sz);
+                if(ImGui::Button(files[n].c_str(), button_sz)){
+                    this->hierarchyWindow()->replaceObjetos(this->fileController()->openScene("Scenes/"+files[n]));
+                }
                 float last_button_x2 = ImGui::GetItemRectMax().x;
                 float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
                 if (n + 1 < files.size() && next_button_x2 < window_visible_x2)

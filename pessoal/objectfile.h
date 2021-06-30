@@ -13,8 +13,11 @@ public:
     Model3DS *model();
     Model3DS *model(Model3DS *model);
 
+    std::string fileName();
+
 private:
      Model3DS* m_model;
+     std::string fileDir;
 };
 
 #endif // OBJECTFILE_H
