@@ -132,7 +132,7 @@ void desenha() {
     glLoadIdentity();
 
     gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
-    //gluLookAt(0,15,0, 0,0,0, 1,0,0);
+
     displayInner();
 
     GUI::setColor(clear_color.x, clear_color.y, clear_color.z, 1);
@@ -231,6 +231,19 @@ void teclado(unsigned char key, int x, int y) {
         if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
             objetos[posSelecionado]->selecionado = true;
         }
+        break;
+    case '\'':{
+        if(hierarchyWindow.itemIndiceSelected() >= 0){
+            float eyeX = glutGUI::cam->e.x;
+            float eyeY = glutGUI::cam->e.y;
+            float eyeZ = glutGUI::cam->e.z;
+            delete glutGUI::cam;
+            int index = hierarchyWindow.itemIndiceSelected();
+            glutGUI::cam = new CameraDistante(Vetor3D(eyeX, eyeY, eyeZ),
+                                              Vetor3D(objetos[index]->t.x, objetos[index]->t.y, objetos[index]->t.z),
+                                              Vetor3D(0,1,0));
+        }
+    }
         break;
 
 
