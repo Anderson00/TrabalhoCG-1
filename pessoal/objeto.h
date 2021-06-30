@@ -14,7 +14,7 @@ public:
     Objeto(std::string nome = "<sem nome>");
     virtual void desenha();
 
-    std::string nome();
+    std::string &nome();
     bool &drawGizmo();
 private:
     std::string m_nome;

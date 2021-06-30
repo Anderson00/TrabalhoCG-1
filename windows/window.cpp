@@ -35,3 +35,8 @@ ImGuiWindowFlags& Window::flags()
 {
     return this->m_flags;
 }
+
+bool &Window::isCollpased()
+{
+    return this->m_isCollpased;
+}

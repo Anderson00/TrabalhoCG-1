@@ -21,10 +21,7 @@ using namespace std;
 #include "windows/menubarwindow.h"
 #include "windows/keyinputwindow.h"
 #include "windows/hierarchywindow.h"
-
-//Model3DS model3ds("../3ds/cartest.3DS");
-
-
+#include "windows/inspectwindow.h"
 
 // Our state
 static bool show_demo_window = false;
@@ -32,6 +29,7 @@ static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 KeyInputWindow inputWindow;
 HierarchyWindow hierarchyWindow;
+InspectWindow inspectWindow;
 MenuBarWindow menubar;
 
 vector<Objeto*> &objetos = hierarchyWindow.objetos();
@@ -46,6 +44,7 @@ void imgui_display()
     menubar.desenhar();
     inputWindow.desenhar();
     hierarchyWindow.desenhar();
+    inspectWindow.desenhar();
 
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
     {
@@ -74,14 +73,14 @@ Vetor3D transformedPoint(Vetor3D p)
 {
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
-        glLoadIdentity();
+    glLoadIdentity();
 
-        glRotatef(objetos[0]->a.z,0,0,1);  // \ .
-        glRotatef(objetos[0]->a.y,0,1,0);  //  | Rz.Ry.Rx . v
-        glRotatef(objetos[0]->a.x,1,0,0);
+    glRotatef(objetos[0]->a.z,0,0,1);  // \ .
+    glRotatef(objetos[0]->a.y,0,1,0);  //  | Rz.Ry.Rx . v
+    glRotatef(objetos[0]->a.x,1,0,0);
 
-        float matrix[16];
-        glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
+    float matrix[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
     glPopMatrix();
 
     float pos[4] = {p.x,p.y,p.z, 1.0};
@@ -105,7 +104,7 @@ void displayInner() {
 
     for (size_t i = 0; i < objetos.size(); ++i) {
         glPushMatrix();
-            objetos[i]->desenha();
+        objetos[i]->desenha();
         glPopMatrix();
     }
 }
@@ -178,31 +177,44 @@ void desenha() {
 bool incluirObjeto = false;
 
 void teclado(unsigned char key, int x, int y) {
-    //if (!incluirObjeto) {
-        GUI::keyInit(key,x,y);
-    //}
+    inputWindow.key() = key;
+
+    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)){
+        ImGui_ImplGLUT_KeyboardFunc(key, x, y);
+        inputWindow.iskeyboardActionsLocked() = true;
+        return;
+    }
+    inputWindow.iskeyboardActionsLocked() = false;
+    GUI::keyInit(key,x,y);
 
     inputWindow.key() = key;
 
     switch (key) {
     case 't':
-        inputWindow.inTranslateMode() = glutGUI::trans_obj = !glutGUI::trans_obj;
+        inputWindow.inTransformationMode() = glutGUI::trans_obj = !glutGUI::trans_obj;
+        if(glutGUI::trans_obj == false)
+            glutGUI::clearModes();
         break;
     case 'l':
-        glutGUI::trans_luz = !glutGUI::trans_luz;
+        inputWindow.inTransformationMode() = glutGUI::trans_luz = !glutGUI::trans_luz;
+        if(glutGUI::trans_obj == false)
+            glutGUI::clearModes();
         break;
-
     case 'n':
-//        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
-//            objetos[posSelecionado]->selecionado = false;
-//        }
-//        posSelecionado++;
-//        posSelecionado = posSelecionado%objetos.size();
-//        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
-//            objetos[posSelecionado]->selecionado = true;
-//        }
+        if(objetos.size() == 0)
+            break;
+        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+            objetos[posSelecionado]->selecionado = false;
+        }
+        posSelecionado++;
+        posSelecionado = posSelecionado%objetos.size();
+        if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
+            objetos[posSelecionado]->selecionado = true;
+        }
         break;
     case 'b':
+        if(objetos.size() == 0)
+            break;
         if (posSelecionado >= 0 and posSelecionado < objetos.size()) {
             objetos[posSelecionado]->selecionado = false;
         }
@@ -262,6 +274,11 @@ void teclado(unsigned char key, int x, int y) {
 
 int main(int argc, char **argv)
 {
+    glutGUI::modes[0] = &inputWindow.inTranslateMode();
+    glutGUI::modes[1] = &inputWindow.inRotationMode();
+    glutGUI::modes[2] = &inputWindow.inScaleMode();
+    inspectWindow.hierarchyWindow(&hierarchyWindow);
+
     QApplication app(argc, argv);
     GUI gui = GUI(800,600,desenha,teclado);
     app.exec();

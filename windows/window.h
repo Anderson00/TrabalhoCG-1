@@ -22,11 +22,13 @@ public:
     ImVec2 &position();
     ImVec2& size();
     ImGuiWindowFlags& flags();
+    bool &isCollpased();
 private:
     std::string m_title;
     ImVec2 m_pos;
     ImVec2 m_size;
     ImGuiWindowFlags m_flags;
+    bool m_isCollpased;
 };
 
 #endif // WINDOW_H

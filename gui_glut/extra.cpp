@@ -3,6 +3,8 @@
 #include "imgui/examples/imgui_impl_glut.h"
 #include "imgui/examples/imgui_impl_opengl2.h"
 
+bool *glutGUI::modes[3];
+
 int glutGUI::width = 400;
 int glutGUI::height = 300;
 
@@ -407,16 +409,23 @@ void glutGUI::mouseMove(int x, int y) {
     float fator = 10.0;
     if (lbpressed && !rbpressed && !mbpressed) {
         if (!trans_obj && (!trans_luz || !obj_transp)) {
+            clearModes();
+
             cam->rotatex(y,last_y);
             cam->rotatey(x,last_x);
         }
         if (trans_obj) {
+            clearModes();
+            *(glutGUI::modes[1]) = true;
+
             dax = (y - last_y)/fator;
             day = (x - last_x)/fator;
             ax += dax;
             ay += day;
         }
         if (trans_luz && obj_transp) {
+            clearModes();
+            *(glutGUI::modes[1]) = true;
             fator = 100.0;
             transparencia -= (y - last_y)/fator;
             if (transparencia < 0.0) transparencia = 0.0;
@@ -426,25 +435,33 @@ void glutGUI::mouseMove(int x, int y) {
     fator = 100.0;
     if (!lbpressed && rbpressed && !mbpressed) {
         if (!trans_obj && !trans_luz) {
+            clearModes();
             cam->translatex(x,last_x);
             cam->translatey(y,last_y);
         }
         if (trans_obj) {
+            clearModes();
+            *(glutGUI::modes[0]) = true;
             dtx = (x - last_x)/fator;
             dty = -(y - last_y)/fator;
             tx += dtx;
             ty += dty;
         }
         if (trans_luz) {
+            clearModes();
+            *(glutGUI::modes[0]) = true;
             lx += (x - last_x)/fator;
             ly += -(y - last_y)/fator;
         }
     }
     if (lbpressed && rbpressed && !mbpressed) {
         if (!trans_obj && !trans_luz) {
+            clearModes();
             cam->zoom(y,last_y);
         }
         if (trans_obj) {
+            clearModes();
+            //*(glutGUI::modes[2]) = true;
             fator = 100.0;
             dtz = (y - last_y)/fator;
             tz += dtz;
@@ -453,6 +470,8 @@ void glutGUI::mouseMove(int x, int y) {
             az += daz;
         }
         if (trans_luz) {
+            clearModes();
+            //*(glutGUI::modes[2]) = true;
             fator = 100.0;
             lz += (y - last_y)/fator;
             fator = 10.0;
@@ -462,7 +481,10 @@ void glutGUI::mouseMove(int x, int y) {
     fator = 100.0;
     if (!lbpressed && !rbpressed && mbpressed) {
         if (!trans_obj) {
+            clearModes();
         } else {
+            clearModes();
+            *(glutGUI::modes[2]) = true;
             dsx = (x - last_x)/fator;
             dsy = -(y - last_y)/fator;
             sx += dsx;
@@ -479,6 +501,11 @@ void glutGUI::mouseMove(int x, int y) {
 
     last_x = x;
     last_y = y;
+}
+
+void glutGUI::clearModes()
+{
+    *(glutGUI::modes[0]) = *(glutGUI::modes[1]) = *(glutGUI::modes[2]) = false;
 }
 
 //------------------------------------------------

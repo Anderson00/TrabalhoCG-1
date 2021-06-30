@@ -28,6 +28,7 @@ enum Axis{AXIS_X,AXIS_Y,AXIS_Z};
 
 class glutGUI {
 public:
+    static bool* modes[3];
     static int width;// = 400;
     static int height;// = 300;
 
@@ -111,6 +112,7 @@ public:
     static void idle(void);
     static void mouseButton(int button, int state, int x, int y);
     static void mouseMove(int x, int y);
+    static void clearModes();
 
     static void multGLMatrixByVector(float res[], float matriz[], float entr[]);
     static void showGLMatrixIn2D(float matriz[]);

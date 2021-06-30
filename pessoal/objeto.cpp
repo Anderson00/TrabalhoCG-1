@@ -16,7 +16,7 @@ void Objeto::desenha()
     glScalef(s.x,s.y,s.z); //transformacao (matriz) mais a direita (mais local)
 }
 
-string Objeto::nome()
+string& Objeto::nome()
 {
     return this->m_nome;
 }

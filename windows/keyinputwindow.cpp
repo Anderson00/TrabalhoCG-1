@@ -30,11 +30,15 @@ void KeyInputWindow::desenhar()
 
     ImGui::Checkbox("Insertion", &this->m_inInsertionMode);
     ImGui::SameLine();
+    ImGui::Checkbox("Transform Mode", &this->m_inTransformationMode);
+    ImGui::Separator();
     ImGui::Checkbox("Translate", &this->m_inTranslateMode);
-
+    ImGui::SameLine();
     ImGui::Checkbox("Rotate", &this->m_inRotationMode);
-    ImGui::SameLine(102);
+    ImGui::SameLine();
     ImGui::Checkbox("Scale", &this->m_inScaleMode);
+    ImGui::Separator();
+    ImGui::Checkbox("Keyboard Actions Locked", &this->m_iskeyboardActionsLocked);
 
     ImGui::End();
 }
@@ -47,6 +51,11 @@ unsigned int &KeyInputWindow::key()
 bool &KeyInputWindow::inInsertionMode()
 {
     return this->m_inInsertionMode;
+}
+
+bool &KeyInputWindow::inTransformationMode()
+{
+    return this->m_inTransformationMode;
 }
 
 bool &KeyInputWindow::inTranslateMode()
@@ -62,4 +71,9 @@ bool &KeyInputWindow::inRotationMode()
 bool &KeyInputWindow::inScaleMode()
 {
     return this->m_inScaleMode;
+}
+
+bool &KeyInputWindow::iskeyboardActionsLocked()
+{
+    return this->m_iskeyboardActionsLocked;
 }

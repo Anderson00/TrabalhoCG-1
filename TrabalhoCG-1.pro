@@ -33,6 +33,7 @@ SOURCES += main.cpp \
     imgui/examples/imgui_impl_opengl2.cpp \
     windows/assetswindow.cpp \
     windows/hierarchywindow.cpp \
+    windows/inspectwindow.cpp \
     windows/keyinputwindow.cpp \
     windows/menubarwindow.cpp \
     windows/window.cpp
@@ -59,6 +60,7 @@ HEADERS += \
     imgui/examples/imgui_impl_glut.h \
     windows/assetswindow.h \
     windows/hierarchywindow.h \
+    windows/inspectwindow.h \
     windows/keyinputwindow.h \
     windows/menubarwindow.h \
     windows/window.h
