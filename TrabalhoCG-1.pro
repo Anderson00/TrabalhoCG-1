@@ -21,6 +21,7 @@ SOURCES += main.cpp \
     gui_glut/extra.cpp \
     gui_glut/gui.cpp \
     pessoal/casa.cpp \
+    pessoal/objectfile.cpp \
     pessoal/personagem.cpp \
     pessoal/objeto.cpp \
     pessoal/carro.cpp \
@@ -31,6 +32,7 @@ SOURCES += main.cpp \
     imgui/imgui_widgets.cpp \
     imgui/examples/imgui_impl_glut.cpp \
     imgui/examples/imgui_impl_opengl2.cpp \
+    utils/filecontroller.cpp \
     windows/assetswindow.cpp \
     windows/hierarchywindow.cpp \
     windows/inspectwindow.cpp \
@@ -49,6 +51,7 @@ HEADERS += \
     gui_glut/extra.h \
     gui_glut/gui.h \
     pessoal/casa.h \
+    pessoal/objectfile.h \
     pessoal/personagem.h \
     pessoal/objeto.h \
     pessoal/carro.h \
@@ -58,6 +61,7 @@ HEADERS += \
     imgui/imgui_draw.h \
     imgui/imgui_widgets.h \
     imgui/examples/imgui_impl_glut.h \
+    utils/filecontroller.h \
     windows/assetswindow.h \
     windows/hierarchywindow.h \
     windows/inspectwindow.h \

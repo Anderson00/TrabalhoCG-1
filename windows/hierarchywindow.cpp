@@ -52,7 +52,8 @@ int &HierarchyWindow::itemIndiceSelected()
 
 void HierarchyWindow::addObjeto(Objeto *obj)
 {
-    this->m_objetos.push_back(obj);
+    if(obj != nullptr)
+        this->m_objetos.push_back(obj);
 }
 
 void HierarchyWindow::removeObjeto(Objeto *obj)

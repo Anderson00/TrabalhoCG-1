@@ -22,6 +22,10 @@ using namespace std;
 #include "windows/keyinputwindow.h"
 #include "windows/hierarchywindow.h"
 #include "windows/inspectwindow.h"
+#include "windows/assetswindow.h"
+
+//File
+#include "utils/filecontroller.h"
 
 // Our state
 static bool show_demo_window = false;
@@ -31,6 +35,7 @@ KeyInputWindow inputWindow;
 HierarchyWindow hierarchyWindow;
 InspectWindow inspectWindow;
 MenuBarWindow menubar;
+AssetsWindow assetsWindow;
 
 vector<Objeto*> &objetos = hierarchyWindow.objetos();
 int &posSelecionado = hierarchyWindow.itemIndiceSelected();
@@ -45,6 +50,7 @@ void imgui_display()
     inputWindow.desenhar();
     hierarchyWindow.desenhar();
     inspectWindow.desenhar();
+    assetsWindow.desenhar();
 
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
     {
@@ -274,10 +280,14 @@ void teclado(unsigned char key, int x, int y) {
 
 int main(int argc, char **argv)
 {
+    FileController controller;
     glutGUI::modes[0] = &inputWindow.inTranslateMode();
     glutGUI::modes[1] = &inputWindow.inRotationMode();
     glutGUI::modes[2] = &inputWindow.inScaleMode();
     inspectWindow.hierarchyWindow(&hierarchyWindow);
+    assetsWindow.hierarchyWindow(&hierarchyWindow);
+    assetsWindow.inspectWindow(&inspectWindow);
+    assetsWindow.fileController(&controller);
 
     QApplication app(argc, argv);
     GUI gui = GUI(800,600,desenha,teclado);

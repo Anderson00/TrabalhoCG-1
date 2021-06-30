@@ -12,8 +12,10 @@ void InspectWindow::desenhar()
 {
     ImGui::SetNextWindowBgAlpha(0.5);
     ImGui::Begin(this->title().c_str(), NULL, this->flags());
+    this->isCollpased() = ImGui::IsWindowCollapsed();
     float y = (this->m_hierarchyWindow->isCollpased())? 19*2 : this->m_hierarchyWindow->size().y + 19;
     ImGui::SetWindowPos(ImVec2(glutGet(GLUT_WINDOW_WIDTH) -  this->size().x, y));
+    this->size().y = glutGet(GLUT_WINDOW_WIDTH) - this->m_hierarchyWindow->size().y;
     ImGui::SetWindowSize(this->size());
 
     if(this->m_hierarchyWindow != nullptr && this->m_hierarchyWindow->objetos().size() > 0){
@@ -23,6 +25,8 @@ void InspectWindow::desenhar()
                 this->m_hierarchyWindow->removeObjeto(this->m_hierarchyWindow->itemIndiceSelected());
                 this->m_hierarchyWindow->itemIndiceSelected() = -1;
             }
+            ImGui::SameLine();
+            ImGui::Checkbox("Gizmo", &objeto->drawGizmo());
             static char name[255];
             memset(name, 0, 255);
             memcpy(name, objeto->nome().c_str(), objeto->nome().size());

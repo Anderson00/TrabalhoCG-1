@@ -11,6 +11,7 @@ public:
     void desenhar() override;
 private:
     void setFileMenu();
+    void setHelpMenu();
 };
 
 #endif // MENUBARWINDOW_H
