@@ -106,7 +106,7 @@ void displayInner() {
     GUI::drawOrigin(1);
 
     GUI::setColor(1,0,0);
-    GUI::drawFloor();
+    //GUI::drawFloor();
 
     for (size_t i = 0; i < objetos.size(); ++i) {
         glPushMatrix();
@@ -136,7 +136,7 @@ void desenha() {
     displayInner();
 
     GUI::setColor(clear_color.x, clear_color.y, clear_color.z, 1);
-    GUI::drawSphere(1, 1, 0, 0.5);
+    //GUI::drawSphere(1, 1, 0, 0.5);
 
     if (!objetos.empty()) {
         glLoadIdentity();

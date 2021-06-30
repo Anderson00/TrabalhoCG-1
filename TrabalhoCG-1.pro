@@ -22,6 +22,7 @@ SOURCES += main.cpp \
     gui_glut/gui.cpp \
     pessoal/casa.cpp \
     pessoal/objectfile.cpp \
+    pessoal/objetoprimitivo.cpp \
     pessoal/personagem.cpp \
     pessoal/objeto.cpp \
     pessoal/carro.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     gui_glut/gui.h \
     pessoal/casa.h \
     pessoal/objectfile.h \
+    pessoal/objetoprimitivo.h \
     pessoal/personagem.h \
     pessoal/objeto.h \
     pessoal/carro.h \

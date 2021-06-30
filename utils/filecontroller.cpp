@@ -1,5 +1,6 @@
 #include "filecontroller.h"
 #include "pessoal/objectfile.h"
+#include "pessoal/objetoprimitivo.h"
 #include <QDebug>
 #include <QString>
 #include <QDateTime>
@@ -104,6 +105,20 @@ bool FileController::saveScene(string fileName, std::vector<Objeto *> objetos)
                 << objConverted->t.x << ";"
                 << objConverted->t.y << ";"
                 << objConverted->t.z << ";" << "\n";
+        }else if(obj->instance() == "primitivo"){
+            ObjetoPrimitivo *objConverted = (ObjetoPrimitivo*) obj;
+            out << QString::fromStdString(objConverted->instance()) << ";"
+                << QString::fromStdString(objConverted->tipo()) << ";"
+                << QString::fromStdString(objConverted->nome()) << ";"
+                << objConverted->a.x << ";"
+                << objConverted->a.y << ";"
+                << objConverted->a.z << ";"
+                << objConverted->s.x << ";"
+                << objConverted->s.y << ";"
+                << objConverted->s.z << ";"
+                << objConverted->t.x << ";"
+                << objConverted->t.y << ";"
+                << objConverted->t.z << ";" << "\n";
         }
     }
 
@@ -126,6 +141,23 @@ std::vector<Objeto *> FileController::openScene(string fileName)
         QStringList list = line.split(";");
         if(list[0] == "3ds"){
             ObjectFile *obj = new ObjectFile(list[1].toStdString());
+            obj->nome() = list[2].toStdString();
+            //rotações
+            obj->a.x = list[3].toFloat();
+            obj->a.y = list[4].toFloat();
+            obj->a.z = list[5].toFloat();
+            //scalas
+            obj->s.x = list[6].toFloat();
+            obj->s.y = list[7].toFloat();
+            obj->s.z = list[8].toFloat();
+            //translações
+            obj->t.x = list[9].toFloat();
+            obj->t.y = list[10].toFloat();
+            obj->t.z = list[11].toFloat();
+
+            objetosCarregados.push_back(obj);
+        }else if(list[0] == "primitivo"){
+            ObjetoPrimitivo *obj = new ObjetoPrimitivo(list[1].toStdString());
             obj->nome() = list[2].toStdString();
             //rotações
             obj->a.x = list[3].toFloat();

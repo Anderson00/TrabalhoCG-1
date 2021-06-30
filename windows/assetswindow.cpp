@@ -1,4 +1,5 @@
 #include "assetswindow.h"
+#include "objetoprimitivo.h"
 
 AssetsWindow::AssetsWindow() : Window("Files", 0, 0, 0, 200)
 {
@@ -54,7 +55,7 @@ void AssetsWindow::desenhar()
             {
                 ImGui::PushID(n);
                 if(ImGui::Button(files[n].c_str(), button_sz)){
-
+                    this->hierarchyWindow()->addObjeto(new ObjetoPrimitivo(files[n]));
                 }
                 float last_button_x2 = ImGui::GetItemRectMax().x;
                 float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line

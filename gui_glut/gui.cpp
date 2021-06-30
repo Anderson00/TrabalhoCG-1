@@ -133,12 +133,12 @@ void GUI::displayInit()
 
         if (glutGUI::trans_luz) {
             GUI::setColor(1,1,1);
-            glPushMatrix();
-                glTranslatef(-1,0.5,-3);
-                float s = 0.1;
-                glScalef(s,s,s);
-                GUI::drawBox(0,0,-0.2,1,1,-0.1);
-            glPopMatrix();
+//            glPushMatrix();
+//                glTranslatef(-1,0.5,-3);
+//                float s = 0.1;
+//                glScalef(s,s,s);
+//                GUI::drawBox(0,0,-0.2,1,1,-0.1);
+//            glPopMatrix();
         }
 
         gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
