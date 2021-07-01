@@ -307,5 +307,5 @@ int main(int argc, char **argv)
 
     QApplication app(argc, argv);
     GUI gui = GUI(800,600,desenha,teclado);
-    app.exec();
+    return app.exec();
 }

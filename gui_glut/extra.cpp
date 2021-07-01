@@ -348,12 +348,13 @@ void glutGUI::idle()
 }
 
 void glutGUI::mouseButton(int button, int state, int x, int y) {
-    ImGui_ImplGLUT_MouseFunc(button, state, x, y);
-    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
-        return;
     dtx = 0.0; dty = 0.0; dtz = 0.0;
     dax = 0.0; day = 0.0; daz = 0.0;
     dsx = 0.0; dsy = 0.0; dsz = 0.0;
+
+    ImGui_ImplGLUT_MouseFunc(button, state, x, y);
+    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+        return;
 
     // if the left button is pressed
     if (button == GLUT_LEFT_BUTTON) {
@@ -396,15 +397,17 @@ void glutGUI::mouseButton(int button, int state, int x, int y) {
 }
 
 void glutGUI::mouseMove(int x, int y) {
-    ImGui_ImplGLUT_MotionFunc(x,y);
-    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
-        return;
+
     if ( mouse_lock == ONLY_X ) last_y = y;
     if ( mouse_lock == ONLY_Y ) last_x = x;
 
     dtx = 0.0; dty = 0.0; dtz = 0.0;
     dax = 0.0; day = 0.0; daz = 0.0;
     dsx = 0.0; dsy = 0.0; dsz = 0.0;
+
+    ImGui_ImplGLUT_MotionFunc(x,y);
+    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+        return;
 
     float fator = 10.0;
     if (lbpressed && !rbpressed && !mbpressed) {
