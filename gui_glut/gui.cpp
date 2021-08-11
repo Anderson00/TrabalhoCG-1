@@ -1,17 +1,21 @@
 #include "gui.h"
 //imgui includes
+#include <functional>
 #include "imgui/imgui.h"
 #include "imgui/examples/imgui_impl_glut.h"
 #include "imgui/examples/imgui_impl_opengl2.h"
 
 std::function<void(int pespIndex)> *GUI::onProjectionChange = new std::function<void(int pespIndex)>([](int p){});
 
-GUI::GUI(int width, int height, displayFunction dFunction, keyFunction kFunction, const char *title) {
+GUI::GUI(int width, int height, displayFunction dFunction, keyFunction kFunction, mouseButtonFunction mbFunction, const char *title) {
     wTitle = title;
     wWidth = width;
     wHeight = height;
     display = dFunction;
     key = kFunction;
+    mouseButton = mbFunction;
+
+    glutGUI::secondaryMouseEvent = mbFunction;
 
     GLUTInit();
 
@@ -411,6 +415,138 @@ void GUI::shadowMatrix(GLfloat shadowMat[4][4], GLfloat groundplane[4], GLfloat 
     shadowMat[3][2] = 0.f - lightpos[W] * groundplane[Z];
     shadowMat[3][3] = dot - lightpos[W] * groundplane[W];
 }
+
+//-------------------picking------------------
+//processa as intersecoes
+int GUI::processHits( GLint hits, GLuint buffer[] ) {
+  //for each hit in buffer
+    //Number of names in the name stack
+    //Minimum depth of the object
+    //Maximum depth of the object
+    //List of names of the name stack
+
+  int i;
+  GLuint names, *ptr, minZ,*ptrNames, numberOfNames;
+  int nNamesSelec = 0;
+
+  ptrNames = NULL;
+
+  printf("Hits = %d\n",hits);
+  printf("Buffer = ");
+  for (i = 0; i < 4*hits; i++) {
+    printf("%u ",buffer[i]);
+  }
+  printf("\n");
+
+  ptr = (GLuint *) buffer;
+  minZ = 0xffffffff;
+  for (i = 0; i < hits; i++) {
+    names = *ptr;
+    //if (names == 3) {
+      ptr++;
+      //if ( (minZ==0xffffffff) || (*ptr < minZ && ( *(ptrNames+1)==*(ptr+3) ) ) || ( *(ptrNames+1)==0 && *(ptr+3)==1 ) ) {
+      if (*ptr < minZ) {
+          numberOfNames = names;
+          minZ = *ptr;
+          if (numberOfNames != 0) {
+            ptrNames = ptr+2;
+            nNamesSelec = names;
+          }
+      }
+    //}
+    ptr += names+2;
+  }
+
+  printf("Selected = ");
+  ptr = ptrNames;
+  for (int j = 0; j < nNamesSelec; j++,ptr++) {
+     printf ("%d ", *ptr);
+  }
+  printf("\n");
+
+  if (ptrNames == NULL)
+      return 0;
+  else
+      return *ptrNames; //acessando o conteudo do ponteiro ptrNames
+      //return {*ptrNames,*(ptrNames+1)};
+}
+
+void GUI::pickingInit(GLint cursorX, GLint cursorY, int w, int h, GLuint* selectBuf, int BUFSIZE)
+{
+    //glViewport(0, 3*glutGUI::height/4, glutGUI::width/4, glutGUI::height/4);
+    glViewport(0, 0, glutGUI::width, glutGUI::height);
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT,viewport);
+
+    glInitNames();
+
+    glSelectBuffer(BUFSIZE,selectBuf);
+    glRenderMode(GL_SELECT);
+
+    glMatrixMode(GL_PROJECTION);
+    //glPushMatrix();
+    glLoadIdentity();
+
+    //redefinindo os planos de corte do volume de visualizacao reduzido (apenas na vizinhanca do pixel selecionado pelo mouse)
+    //gluPickMatrix(cursorX,glutGUI::height-cursorY,w,h,viewport);
+    gui_gluPickMatrix(cursorX,glutGUI::height-cursorY,w,h,viewport);
+    //cout << cursorY << " " << glutGUI::height-cursorY << endl;
+
+    glDisable(GL_LIGHTING);
+
+    glutGUI::picking = true;
+}
+
+int GUI::pickingClosestName(GLuint *selectBuf, int BUFSIZE)
+{
+    glutGUI::picking = false;
+
+    glEnable(GL_LIGHTING);
+
+    //processando as intersecoes
+        int hits;
+
+        // restoring the original projection matrix
+        //glMatrixMode(GL_PROJECTION);
+        //glPopMatrix();
+        //glMatrixMode(GL_MODELVIEW);
+        //glFlush();
+
+        // returning to normal rendering mode
+        hits = glRenderMode(GL_RENDER);
+
+        // if there are hits process them
+        if (hits != 0) {
+          return GUI::processHits(hits,selectBuf);
+        } else {
+          return 0;
+        }
+}
+
+void GUI::gui_gluPickMatrix(GLfloat cursorX, GLfloat cursorY, GLfloat w, GLfloat h, GLint *viewport)
+{
+    //cursorY = glutGUI::height - cursorY;
+    //normalized device (nd) coordinates (cubo 2x2x2)
+    float cursorX_nd = (cursorX - viewport[0])*(2.0/viewport[2]) - 1;
+    float cursorY_nd = (cursorY - viewport[1])*(2.0/viewport[3]) - 1;
+    float w_nd = w*(2.0/viewport[2]);
+    float h_nd = h*(2.0/viewport[3]);
+    glScalef(2.0/w_nd, 2.0/h_nd, 1);
+    glTranslatef(-cursorX_nd, -cursorY_nd, 0);
+}
+//-------------------picking------------------
+
+//-------------------viewPorts------------------
+void GUI::glScissoredViewport(int x, int y, int width, int height)
+{
+    glScissor(x, y, width, height);
+    glEnable(GL_SCISSOR_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_SCISSOR_TEST);
+
+    glViewport(x, y, width, height);
+}
+//-------------------viewPorts------------------
 
 void GUI::drawSphere(float x, float y, float z, float radius)
 {
