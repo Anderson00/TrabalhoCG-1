@@ -293,6 +293,12 @@ void teclado(unsigned char key, int x, int y) {
 
 int main(int argc, char **argv)
 {
+    GUI::onProjectionChange = new std::function([&](int pespIndex) {
+       if(pespIndex >= 0){
+           inputWindow.projectionMode() = pespIndex;
+       }
+    });
+
     FileController controller;
     glutGUI::modes[0] = &inputWindow.inTranslateMode();
     glutGUI::modes[1] = &inputWindow.inRotationMode();

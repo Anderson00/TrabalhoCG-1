@@ -4,6 +4,8 @@
 #include "imgui/examples/imgui_impl_glut.h"
 #include "imgui/examples/imgui_impl_opengl2.h"
 
+std::function<void(int pespIndex)> *GUI::onProjectionChange = new std::function<void(int pespIndex)>([](int p){});
+
 GUI::GUI(int width, int height, displayFunction dFunction, keyFunction kFunction, const char *title) {
     wTitle = title;
     wWidth = width;
@@ -105,6 +107,11 @@ void GUI::setKey(keyFunction kFunction) {
     glutKeyboardFunc(key);
 }
 
+//void GUI::setKeyInputWindow(KeyInputWindow *inOutWindow)
+//{
+//    this->inOutWindow = inOutWindow;
+//}
+
 //using namespace glutGUI;
 
 void GUI::displayInit()
@@ -119,10 +126,20 @@ void GUI::displayInit()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    if (glutGUI::perspective)
+    if (glutGUI::perspective == 0){
         gluPerspective(30.,ar,0.1,1000.);
-    else
+        (*onProjectionChange)(0);
+    }
+    else if(glutGUI::perspective == 1){
         glOrtho(-orthof*w,orthof*w,-orthof*h,orthof*h,0.0,100.0);
+        (*onProjectionChange)(1);
+    }else if(glutGUI::perspective == 2){
+        //glOrtho(-orthof*w,orthof*w,-orthof*h,orthof*h,0.0,100.0);
+        (*onProjectionChange)(2);
+    }else if(glutGUI::perspective == 3){
+        //glOrtho(-orthof*w,orthof*w,-orthof*h,orthof*h,0.0,100.0);
+        (*onProjectionChange)(3);
+    }
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();

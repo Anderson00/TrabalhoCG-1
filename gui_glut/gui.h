@@ -4,6 +4,7 @@
 typedef void (* displayFunction)( void );
 typedef void (* keyFunction)( unsigned char, int, int );
 
+#include <functional>
 #include "extra.h"
 #include "model3ds.h"
 
@@ -15,11 +16,14 @@ class GUI {
         displayFunction display;
         keyFunction key;
 
+
     public:
         GUI( int width, int height, displayFunction dFunction = glutGUI::defaultDisplay, keyFunction kFunction = glutGUI::defaultKey, const char *title = "GLUT" );
         void GLUTInit();
         void GLInit();
         ~GUI();
+
+        static std::function<void(int pespIndex)> *onProjectionChange;
 
         void setTitle(const char *title);
         void setDimensions(int width, int height);

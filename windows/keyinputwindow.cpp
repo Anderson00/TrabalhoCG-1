@@ -39,6 +39,24 @@ void KeyInputWindow::desenhar()
     ImGui::Checkbox("Scale", &this->m_inScaleMode);
     ImGui::Separator();
     ImGui::Checkbox("Keyboard Actions Locked", &this->m_iskeyboardActionsLocked);
+    ImGui::Separator();
+    ImGui::Text("Projections");
+
+    // Simple selection popup
+    // (If you want to show the current selection inside the Button itself, you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
+    if (ImGui::Button("selecionar.."))
+        ImGui::OpenPopup("my_select_popup");
+    ImGui::SameLine();
+    ImGui::TextUnformatted(this->m_projectionMode == -1 ? "<None>" : this->m_projectioNames[this->m_projectionMode]);
+    if (ImGui::BeginPopup("my_select_popup"))
+    {
+        ImGui::Text("Projeções");
+        ImGui::Separator();
+        for (int i = 0; i < IM_ARRAYSIZE(this->m_projectioNames); i++)
+            if (ImGui::Selectable(this->m_projectioNames[i]))
+                glutGUI::perspective = this->m_projectionMode = i;
+        ImGui::EndPopup();
+    }
 
     ImGui::End();
 }
@@ -76,4 +94,9 @@ bool &KeyInputWindow::inScaleMode()
 bool &KeyInputWindow::iskeyboardActionsLocked()
 {
     return this->m_iskeyboardActionsLocked;
+}
+
+int &KeyInputWindow::projectionMode()
+{
+    return this->m_projectionMode;
 }

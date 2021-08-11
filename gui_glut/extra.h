@@ -32,7 +32,8 @@ public:
     static int width;// = 400;
     static int height;// = 300;
 
-    static bool perspective;// = true;
+    //static bool perspective;// = true;
+    static uint perspective; // 0= Pespectiva, 1 = ortho, 2 = Obliqua, 3 = Frustu
 
     static bool lbpressed;// = false;
     static bool mbpressed;// = false;

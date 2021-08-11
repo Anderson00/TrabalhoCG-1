@@ -8,7 +8,7 @@ bool *glutGUI::modes[3];
 int glutGUI::width = 400;
 int glutGUI::height = 300;
 
-bool glutGUI::perspective = true;
+uint glutGUI::perspective = 0;
 
 bool glutGUI::lbpressed = false;
 bool glutGUI::mbpressed = false;

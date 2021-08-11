@@ -19,6 +19,8 @@ public:
     bool &inScaleMode();
     bool &iskeyboardActionsLocked();
 
+    int &projectionMode();
+
 private:
     unsigned int m_key;
     bool m_inInsertionMode;
@@ -26,6 +28,8 @@ private:
     bool m_inTranslateMode;
     bool m_inRotationMode;
     bool m_inScaleMode;
+    int m_projectionMode = -1;
+    const char* m_projectioNames[4] = { "Pespective", "Ortho", "Obliq", "Frust" };
 
     bool m_iskeyboardActionsLocked;
 };
