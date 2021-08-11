@@ -240,7 +240,7 @@ void GUI::setLight(int id, float posx, float posy, float posz, bool onOffKeyDefa
 }
 
 void GUI::setColor(float r, float g, float b, float a, bool specular) {
-    GLfloat mat_ambient[]    = { 0.6*r, 0.6*g, 0.6*b, a };
+    GLfloat mat_ambient[]    = { 0.6f*r, 0.6f*g, 0.6f*b, a };
     GLfloat mat_diffuse[]    = { r, g, b, a };
     GLfloat mat_specular[]   = { 0.0f, 0.0f, 0.0f, a };
         if (specular) mat_specular[0] = mat_specular[1] = mat_specular[2] = 1.0f; //0.5f;
@@ -349,6 +349,67 @@ void GUI::glReflectPlaneXYf()
                             0.0,    0.0,    0.0,    1.0
                          };
     glMultTransposeMatrixd( transform );
+}
+
+void GUI::shadowMatrixYk(GLfloat shadowMat[4][4], GLfloat lightpos[4], GLfloat k)
+{
+    enum {X,Y,Z,W};
+
+    shadowMat[0][0] =  k*lightpos[W] - lightpos[Y];
+    shadowMat[0][1] =  lightpos[X];
+    shadowMat[0][2] =  0.0;
+    shadowMat[0][3] = -k*lightpos[X];
+
+    shadowMat[1][0] =  0.0;
+    shadowMat[1][1] =  k*lightpos[W];
+    shadowMat[1][2] =  0.0;
+    shadowMat[1][3] = -k*lightpos[Y];
+
+    shadowMat[2][0] =  0.0;
+    shadowMat[2][1] =  lightpos[Z];
+    shadowMat[2][2] =  k*lightpos[W] - lightpos[Y];
+    shadowMat[2][3] = -k*lightpos[Z];
+
+    shadowMat[3][0] =  0.0;
+    shadowMat[3][1] =  lightpos[W];
+    shadowMat[3][2] =  0.0;
+    shadowMat[3][3] = -lightpos[Y];
+
+    for (int i=0;i<4;i++)
+        for (int j=0;j<4;j++)
+            shadowMat[i][j] *= -1;
+}
+
+void GUI::shadowMatrix(GLfloat shadowMat[4][4], GLfloat groundplane[4], GLfloat lightpos[4])
+{
+    enum {X,Y,Z,W};
+    GLfloat dot;
+
+    /* Find dot product between light position vector and ground plane normal. */
+    dot = groundplane[X] * lightpos[X] +
+    groundplane[Y] * lightpos[Y] +
+    groundplane[Z] * lightpos[Z] +
+    groundplane[W] * lightpos[W];
+
+    shadowMat[0][0] = dot - lightpos[X] * groundplane[X];
+    shadowMat[0][1] = 0.f - lightpos[X] * groundplane[Y];
+    shadowMat[0][2] = 0.f - lightpos[X] * groundplane[Z];
+    shadowMat[0][3] = 0.f - lightpos[X] * groundplane[W];
+
+    shadowMat[1][0] = 0.f - lightpos[Y] * groundplane[X];
+    shadowMat[1][1] = dot - lightpos[Y] * groundplane[Y];
+    shadowMat[1][2] = 0.f - lightpos[Y] * groundplane[Z];
+    shadowMat[1][3] = 0.f - lightpos[Y] * groundplane[W];
+
+    shadowMat[2][0] = 0.f - lightpos[Z] * groundplane[X];
+    shadowMat[2][1] = 0.f - lightpos[Z] * groundplane[Y];
+    shadowMat[2][2] = dot - lightpos[Z] * groundplane[Z];
+    shadowMat[2][3] = 0.f - lightpos[Z] * groundplane[W];
+
+    shadowMat[3][0] = 0.f - lightpos[W] * groundplane[X];
+    shadowMat[3][1] = 0.f - lightpos[W] * groundplane[Y];
+    shadowMat[3][2] = 0.f - lightpos[W] * groundplane[Z];
+    shadowMat[3][3] = dot - lightpos[W] * groundplane[W];
 }
 
 void GUI::drawSphere(float x, float y, float z, float radius)

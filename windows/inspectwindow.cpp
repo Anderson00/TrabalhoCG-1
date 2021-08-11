@@ -27,6 +27,7 @@ void InspectWindow::desenhar()
             }
             ImGui::SameLine();
             ImGui::Checkbox("Gizmo", &objeto->drawGizmo());
+            ImGui::Checkbox("Shadow", &objeto->shadowVisible());
             static char name[255];
             memset(name, 0, 255);
             memcpy(name, objeto->nome().c_str(), objeto->nome().size());

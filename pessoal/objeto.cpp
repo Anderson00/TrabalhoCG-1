@@ -26,6 +26,11 @@ bool &Objeto::drawGizmo()
     return this->m_drawGizmo;
 }
 
+bool &Objeto::shadowVisible()
+{
+    return this->m_shadowVisible;
+}
+
 string Objeto::instance()
 {
     return this->m_instance;

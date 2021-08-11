@@ -16,10 +16,12 @@ public:
 
     std::string &nome();
     bool &drawGizmo();
+    bool &shadowVisible();
     std::string instance();
 private:
     std::string m_nome;
     bool m_drawGizmo = false;
+    bool m_shadowVisible = false;
     std::string m_instance;
 };
 
