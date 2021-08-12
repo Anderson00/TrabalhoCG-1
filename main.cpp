@@ -68,15 +68,20 @@ void viewPorts() {
     //viewport auxiliar sobrepondo a principal
     if (!scissored) {
         //misturando com a principal
-        glViewport(0, 3*height/4, width/4, height/4);
+        //glViewport(0, 3*height/4, width/4, height/4);
+        GUI::glScissoredViewport(0, 0, width, height);
     } else {
         //recortando/substituindo o pedaço
-        GUI::glScissoredViewport(0, 3*height/4, width/4, height/4);
+        //GUI::glScissoredViewport(0, 3*height/4, width/4, height/4);
+        GUI::glScissoredViewport(0, height/2 - height/4, width/4, height/4);
     }
         glLoadIdentity();
-//        Vetor3D eye = pontosControle[4];
-//        Vetor3D center = pontosControle[2];
-//        gluLookAt(eye.x,eye.y,eye.z, center.x,center.y,center.z, 0.0,1.0,0.0);
+        if(posSelecionado >= 0 && objetos[posSelecionado] != nullptr){
+            Vetor3D eye = objetos[posSelecionado]->t;
+            Vetor3D center = {0.0f,0.0f,0.0f};
+            gluLookAt(eye.x,eye.y,eye.z, center.x,center.y,center.z, 0.0,1.0,0.0);
+        }
+
             cenario();
 }
 //-------------------viewPorts------------------
@@ -85,7 +90,7 @@ void cenario() {
     //GUI::setLight(1,1,3,5,true,false);               //multiplas fontes de luz
     //GUI::setLight(2,-1.5,0.5,-1,true,false);         //multiplas fontes de luz
     //GUI::setLight(3,-5,3,5,true,false);
-    //GUI::setLight(3,-5,3,5,true,true); //atenuada
+    GUI::setLight(3,-5,3,5,true,true); //atenuada
     //GUI::setLight(3,-5,3,5,true,false,false,false,true,true); //spot (holofote, lanterna)
 
     //GUI::drawOrigin(0.5);
