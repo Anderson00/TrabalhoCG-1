@@ -128,7 +128,15 @@ void GUI::displayInit()
     const float orthof = 0.003; //orthoFactor
 
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    //glLoadIdentity();
+
+    if (!glutGUI::picking) {
+        glLoadIdentity();
+    } else {
+        //lembrar de nao inicializar a matriz de projecao,
+        //pois a gluPickMatrix é que redefine os planos de corte do volume de visualizacao reduzido
+        //(apenas na vizinhanca do pixel selecionado pelo mouse)
+    }
 
     if (glutGUI::perspective == 0){
         gluPerspective(30.,ar,0.1,1000.);

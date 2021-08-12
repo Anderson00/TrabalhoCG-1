@@ -356,8 +356,10 @@ void glutGUI::mouseButton(int button, int state, int x, int y) {
     dsx = 0.0; dsy = 0.0; dsz = 0.0;
 
     ImGui_ImplGLUT_MouseFunc(button, state, x, y);
-    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)){
+        glutGUI::picking = false;
         return;
+    }
 
     if(glutGUI::secondaryMouseEvent != nullptr){
         glutGUI::secondaryMouseEvent(button, state, x, y);
