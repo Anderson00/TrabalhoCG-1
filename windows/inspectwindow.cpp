@@ -53,8 +53,6 @@ void InspectWindow::desenhar()
             ImGui::Separator();
 
             float *cores[4] = {&objeto->m_r, &objeto->m_g, &objeto->m_b, &objeto->m_alp};
-            std::cout << objeto->m_r << std::endl;
-            ImGui::DragFloat4("RGBA", cores[0], 0.05f, 0.0f, 1.0f);
             ImGui::ColorPicker3("Cor", cores[0]);
 
         }

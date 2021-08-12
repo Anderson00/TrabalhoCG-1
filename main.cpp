@@ -50,6 +50,7 @@ Objeto *chaoObj = nullptr;
 //-------------------viewPorts------------------
 bool viewports = false;
 bool scissored = false;
+bool _3dsviewports = false;
 
 void cenario();
 void desenhaPontosDeControle();
@@ -60,11 +61,40 @@ void viewPorts() {
     float height = glutGUI::height;
 
     //viewport principal
-    glViewport(0, 0, width, height);
-        glLoadIdentity();
-        gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
-            cenario();
+    if(!_3dsviewports){
+        glViewport(0, 0, width, height);
+            glLoadIdentity();
+            gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+                cenario();
+    }else{
+        //Superior esquerdo
+        glViewport(0, height/2, width/2, height/2);
+            glLoadIdentity();
+            gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+                cenario();
+        //Superior direito
+        glViewport(0, 0, width/2, height/2);
+            glLoadIdentity();
+            gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+                cenario();
 
+       //Inferior Esquerdo
+        glViewport(width/2, height/2, width/2, height/2);
+            glLoadIdentity();
+            gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+                cenario();
+
+        //Inferior Esquerdo
+         glViewport(width/2, 0, width/2, height/2);
+             glLoadIdentity();
+             gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+                 cenario();
+    }
+
+
+
+    if(viewports == false)
+        return;
     //viewport auxiliar sobrepondo a principal
     if (!scissored) {
         //misturando com a principal
@@ -250,7 +280,7 @@ void displayInner() {
     //GUI::setLight(3,-5,3,5,true,false);
     Objeto *floor = nullptr;
 
-    GUI::drawOrigin(1);
+    //GUI::drawOrigin(1);
 
     GUI::setColor(1,0,0);
     //GUI::drawFloor();
@@ -445,6 +475,9 @@ void teclado(unsigned char key, int x, int y) {
         break;
     case 's':
         scissored = !scissored;
+        break;
+    case '\\':
+        _3dsviewports = !_3dsviewports;
         break;
 
     default:
