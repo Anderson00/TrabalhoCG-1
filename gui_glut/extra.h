@@ -26,13 +26,19 @@ using namespace std;
 enum MouseLock{NOT_LOCKED,ONLY_X,ONLY_Y};
 enum Axis{AXIS_X,AXIS_Y,AXIS_Z};
 
+typedef void (* mouseButtonFunction)( int, int, int, int );
+
 class glutGUI {
 public:
     static bool* modes[3];
     static int width;// = 400;
     static int height;// = 300;
 
-    static bool perspective;// = true;
+    static mouseButtonFunction secondaryMouseEvent;
+
+    //static bool perspective;// = true;
+    static uint perspective; // 0= Pespectiva, 1 = ortho, 2 = Obliqua, 3 = Frustu
+    static bool picking;// = false;
 
     static bool lbpressed;// = false;
     static bool mbpressed;// = false;

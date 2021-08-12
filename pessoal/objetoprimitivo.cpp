@@ -10,7 +10,7 @@ void ObjetoPrimitivo::desenha()
     glPushMatrix();
         Objeto::desenha();
         GUI::setColor(0.5, 0.5, 0.5, 1);
-        if(this->m_tipo == "Box"){
+        if(this->m_tipo == "Box"){            
            GUI::drawBox(-0.5,0.0,-0.5, 0.5,0.5,0.5);
         }else if(this->m_tipo == "Sphere"){
             GUI::drawSphere(1, 1, 0, 0.5);

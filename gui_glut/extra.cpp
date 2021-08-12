@@ -5,10 +5,13 @@
 
 bool *glutGUI::modes[3];
 
+mouseButtonFunction glutGUI::secondaryMouseEvent = nullptr;
+
 int glutGUI::width = 400;
 int glutGUI::height = 300;
 
-bool glutGUI::perspective = true;
+uint glutGUI::perspective = 0;
+bool glutGUI::picking = false;
 
 bool glutGUI::lbpressed = false;
 bool glutGUI::mbpressed = false;
@@ -353,8 +356,14 @@ void glutGUI::mouseButton(int button, int state, int x, int y) {
     dsx = 0.0; dsy = 0.0; dsz = 0.0;
 
     ImGui_ImplGLUT_MouseFunc(button, state, x, y);
-    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+    if(ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)){
+        glutGUI::picking = false;
         return;
+    }
+
+    if(glutGUI::secondaryMouseEvent != nullptr){
+        glutGUI::secondaryMouseEvent(button, state, x, y);
+    }
 
     // if the left button is pressed
     if (button == GLUT_LEFT_BUTTON) {

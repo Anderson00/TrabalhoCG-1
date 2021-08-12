@@ -3,7 +3,9 @@
 
 typedef void (* displayFunction)( void );
 typedef void (* keyFunction)( unsigned char, int, int );
+typedef void (* mouseButtonFunction)( int, int, int, int );
 
+#include <functional>
 #include "extra.h"
 #include "model3ds.h"
 
@@ -14,12 +16,15 @@ class GUI {
         int wWidth, wHeight; //window dimensions
         displayFunction display;
         keyFunction key;
+        mouseButtonFunction mouseButton;
 
     public:
-        GUI( int width, int height, displayFunction dFunction = glutGUI::defaultDisplay, keyFunction kFunction = glutGUI::defaultKey, const char *title = "GLUT" );
+        GUI( int width, int height, displayFunction dFunction = glutGUI::defaultDisplay, keyFunction kFunction = glutGUI::defaultKey, mouseButtonFunction mbFunction = nullptr, const char *title = "GLUT" );
         void GLUTInit();
         void GLInit();
         ~GUI();
+
+        static std::function<void(int pespIndex)> *onProjectionChange;
 
         void setTitle(const char *title);
         void setDimensions(int width, int height);
@@ -40,6 +45,22 @@ class GUI {
         static void glReflectPlaneYZf(); //inverte sinal de X
         static void glReflectPlaneXZf(); //inverte sinal de Y
         static void glReflectPlaneXYf(); //inverte sinal de Z
+
+        //-------------------sombra-------------------
+        static void shadowMatrixYk(GLfloat shadowMat[4][4], GLfloat lightpos[4], GLfloat k);
+        static void shadowMatrix(GLfloat shadowMat[4][4], GLfloat groundplane[4], GLfloat lightpos[4]);
+        //-------------------sombra-------------------
+
+        //-------------------picking------------------
+        static int processHits(GLint hits, GLuint buffer[]);
+        static void pickingInit(GLint cursorX, GLint cursorY, int w, int h, GLuint* selectBuf, int BUFSIZE);
+        static int pickingClosestName(GLuint* selectBuf, int BUFSIZE);
+        static void gui_gluPickMatrix(GLfloat cursorX, GLfloat cursorY, GLfloat w, GLfloat h, GLint* viewport);
+        //-------------------picking------------------
+
+        //-------------------viewPorts------------------
+        static void glScissoredViewport(int x, int y, int width, int height);
+        //-------------------viewPorts------------------
 
         static void drawSphere(float x, float y, float z, float radius);
         static void drawQuad(float width = 5.0, float height = 5.0, float discrWidth = 0.3, float discrHeight = 0.3, float texWidth = 5.0, float texHeight = 5.0, bool inverted = false);
