@@ -147,9 +147,29 @@ void GUI::displayInit()
         (*onProjectionChange)(1);
     }else if(glutGUI::perspective == 2){
         //glOrtho(-orthof*w,orthof*w,-orthof*h,orthof*h,0.0,100.0);
+        //obliqua
+        float s = 10;
+        float near = 9;
+        glOrtho(-s, s, -s, s, near, 20);
+        glTranslatef(0.0,0.0,-near); //translada -near em z de volta
+        //matriz de cisalhamento (projecao obliqua)
+        float alfa = 45; //60; //30 //90
+        alfa = alfa*(PI/180); //grau2rad
+        float phi = -45; //-60; //-30 //-90
+        phi = phi*(PI/180); //grau2rad
+        float transform[16] = {
+            1.0,    0.0,    1.0f/tan(alfa),   0.0,
+            0.0,    1.0,    1.0f/tan(phi),    0.0,
+            0.0,    0.0,    1.0,             0.0,
+            0.0,    0.0,    0.0,             1.0
+        };
+        glMultTransposeMatrixf( transform );
+        glTranslatef(0.0,0.0,near); //translada near em z
         (*onProjectionChange)(2);
     }else if(glutGUI::perspective == 3){
         //glOrtho(-orthof*w,orthof*w,-orthof*h,orthof*h,0.0,100.0);
+        float s = 0.4;
+        glFrustum(-s, s, -s, s, 1, 1000.0); //2.5);
         (*onProjectionChange)(3);
     }
 
