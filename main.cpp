@@ -44,38 +44,98 @@ int &posSelecionado = hierarchyWindow.itemIndiceSelected();
 bool drawShadow = true;
 bool pontual = true;
 float k = 0.0;
+Objeto *chaoObj = nullptr;
 //-------------------sombra-------------------
 
 //-------------------viewPorts------------------
 bool viewports = false;
 bool scissored = false;
+bool _3dsviewports = false;
+std::vector<Camera*> _3dsviewportsCameras;
+
 
 void cenario();
 void desenhaPontosDeControle();
 
 //visao de duas cameras (duas viewports), viewport auxiliar sobrepondo a principal
 void viewPorts() {
+    static Camera *cameraPrincipal = glutGUI::cam;
     float width = glutGUI::width;
     float height = glutGUI::height;
 
     //viewport principal
-    glViewport(0, 0, width, height);
-        glLoadIdentity();
-        gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
-            cenario();
+    if(!_3dsviewports){
+        glViewport(0, 0, width, height);
+            glLoadIdentity();
+            gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+                cenario();
+    }else{
+        glBegin(GL_LINE);
 
+
+        if((inputWindow.mouseX() >= 0 && inputWindow.mouseX() <= width/2) &&
+           (inputWindow.mouseY() >= 0 && inputWindow.mouseY() <= height/2)){
+            glutGUI::cam = _3dsviewportsCameras[0];
+            _3dsviewportsCameras[0]->c.x = _3dsviewportsCameras[0]->e.x;
+            _3dsviewportsCameras[0]->c.y = _3dsviewportsCameras[0]->e.y;
+        }else if((inputWindow.mouseX() >= width/2 && inputWindow.mouseX() <= width) &&
+                 (inputWindow.mouseY() >= 0 && inputWindow.mouseY() <= height/2)){
+            glutGUI::cam = _3dsviewportsCameras[1];
+            _3dsviewportsCameras[1]->c.y = _3dsviewportsCameras[1]->e.y;
+            _3dsviewportsCameras[1]->c.z = _3dsviewportsCameras[1]->e.z;
+        }else{
+            glutGUI::cam = cameraPrincipal;
+        }
+
+        _3dsviewportsCameras[3]->e.x = 0;
+        _3dsviewportsCameras[3]->e.y = 10;
+        _3dsviewportsCameras[3]->e.z = 0.00001f;
+        //Superior esquerdo
+        glViewport(0, height/2, width/2, height/2);
+            glLoadIdentity();
+            gluLookAt(_3dsviewportsCameras[0]->e.x, _3dsviewportsCameras[0]->e.y, _3dsviewportsCameras[0]->e.z, _3dsviewportsCameras[0]->c.x, _3dsviewportsCameras[0]->c.y, _3dsviewportsCameras[0]->c.z, _3dsviewportsCameras[0]->u.x, _3dsviewportsCameras[0]->u.y, _3dsviewportsCameras[0]->u.z);
+                cenario();
+        //Inferior Esquerdo
+        glViewport(0, 0, width/2, height/2);
+            glLoadIdentity();
+            //gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+            gluLookAt(cameraPrincipal->e.x,cameraPrincipal->e.y,cameraPrincipal->e.z, cameraPrincipal->c.x,cameraPrincipal->c.y,cameraPrincipal->c.z, cameraPrincipal->u.x,cameraPrincipal->u.y,cameraPrincipal->u.z);
+                cenario();
+
+       //Superior Direito
+        glViewport(width/2, height/2, width/2, height/2);
+            glLoadIdentity();
+            gluLookAt(_3dsviewportsCameras[1]->e.x, _3dsviewportsCameras[1]->e.y, _3dsviewportsCameras[1]->e.z, _3dsviewportsCameras[1]->c.x, _3dsviewportsCameras[1]->c.y, _3dsviewportsCameras[1]->c.z, _3dsviewportsCameras[1]->u.x, _3dsviewportsCameras[1]->u.y, _3dsviewportsCameras[1]->u.z);
+                cenario();
+
+        //Inferior Direito
+         glViewport(width/2, 0, width/2, height/2);
+             glLoadIdentity();
+             gluLookAt(_3dsviewportsCameras[3]->e.x, _3dsviewportsCameras[3]->e.y, _3dsviewportsCameras[3]->e.z, _3dsviewportsCameras[3]->c.x, _3dsviewportsCameras[3]->c.y, _3dsviewportsCameras[3]->c.z, _3dsviewportsCameras[3]->u.x, _3dsviewportsCameras[3]->u.y, _3dsviewportsCameras[3]->u.z);
+                 cenario();
+    }
+
+
+
+    if(viewports == false)
+        return;
     //viewport auxiliar sobrepondo a principal
     if (!scissored) {
         //misturando com a principal
-        glViewport(0, 3*height/4, width/4, height/4);
+        //glViewport(0, 3*height/4, width/4, height/4);
+        GUI::glScissoredViewport(0, 0, width, height);
     } else {
         //recortando/substituindo o pedaço
-        GUI::glScissoredViewport(0, 3*height/4, width/4, height/4);
+        //GUI::glScissoredViewport(0, 3*height/4, width/4, height/4);
+        GUI::glScissoredViewport(0, height/2 - height/4, width/4, height/4);
     }
         glLoadIdentity();
-//        Vetor3D eye = pontosControle[4];
-//        Vetor3D center = pontosControle[2];
-//        gluLookAt(eye.x,eye.y,eye.z, center.x,center.y,center.z, 0.0,1.0,0.0);
+        if(posSelecionado >= 0 && objetos[posSelecionado] != nullptr){
+            Vetor3D eye = objetos[posSelecionado]->t;
+            Vetor3D center = {0.0f,0.0f,0.0f};
+            gluLookAt(eye.x,eye.y,eye.z, center.x,center.y,center.z, 0.0,1.0,0.0);
+        }
+
             cenario();
 }
 //-------------------viewPorts------------------
@@ -83,18 +143,61 @@ void viewPorts() {
 void cenario() {
     //GUI::setLight(1,1,3,5,true,false);               //multiplas fontes de luz
     //GUI::setLight(2,-1.5,0.5,-1,true,false);         //multiplas fontes de luz
-    GUI::setLight(3,-5,3,5,true,false);
-    //GUI::setLight(3,-5,3,5,true,true); //atenuada
+    //GUI::setLight(3,-5,3,5,true,false);
+    GUI::setLight(3,-5,3,5,true,true); //atenuada
     //GUI::setLight(3,-5,3,5,true,false,false,false,true,true); //spot (holofote, lanterna)
 
-    GUI::drawOrigin(0.5);
+    //GUI::drawOrigin(0.5);
 
     //GUI::setColor(1,0,0);
     //GUI::drawFloor();
-    GUI::setColor(0,0,0);
-    Desenha::drawGrid( 5, 0, 1, 1 );
+    GUI::setColor(0,0,0, 0.2);
+    Desenha::drawGrid( 5, 0, 5, 2 );
 
     desenhaPontosDeControle();
+
+    //-------------------sombra-------------------
+    //definindo a luz que sera usada para gerar a sombra
+    float lightPos[4] = {-1+glutGUI::lx,2+glutGUI::ly,1+glutGUI::lz, pontual};
+    if(chaoObj != nullptr){
+        k = chaoObj->t.y + 0.01;
+    }
+    //GUI::setLight(0,lightPos[0],lightPos[1],lightPos[2],true,false,false,false,pontual);
+    GUI::setLight(0,-1,2,1,true,false,false,false, pontual);
+    //desenhando os objetos projetados
+    glPushMatrix();
+        //matriz p multiplicar tudo por -1
+            //float neg[16] = {
+            //                   -1.0, 0.0, 0.0, 0.0,
+            //                    0.0,-1.0, 0.0, 0.0,
+            //                    0.0, 0.0,-1.0, 0.0,
+            //                    0.0, 0.0, 0.0,-1.0
+            //                };
+            //glMultTransposeMatrixf( neg );
+        //matriz de projecao para gerar sombra no plano y=k
+            GLfloat sombra[4][4];
+            GUI::shadowMatrixYk(sombra,lightPos,k);
+            //GLfloat plano[4] = {0,1,0,-k};
+            //GUI::shadowMatrix(sombra,plano,lightPos);
+            glMultTransposeMatrixf( (GLfloat*)sombra );
+
+        glDisable(GL_LIGHTING);
+        glColor3d(0.0,0.0,0.0);
+        if (drawShadow) {
+            bool aux = glutGUI::draw_eixos;
+            glutGUI::draw_eixos = false;
+            for (int i = 0; i < objetos.size(); ++i) {
+                if(objetos[i]->shadowVisible()){
+                    glPushMatrix();
+                        objetos[i]->desenha();
+                    glPopMatrix();
+                }
+            }
+            glutGUI::draw_eixos = aux;
+        }
+        glEnable(GL_LIGHTING);
+    glPopMatrix();
+    //-------------------sombra-------------------
 }
 
 
@@ -123,7 +226,11 @@ void desenhaPontosDeControle()
                 p->drawGizmo() = true;
             else
                 p->drawGizmo() = false;
-            GUI::setColor(1,0,0,1, true);
+
+            if(p->nome() == "chao"){
+                chaoObj = p;
+                chaoObj->shadowVisible() = false;
+            }
         glPopName();
     }
 
@@ -193,72 +300,12 @@ void displayInner() {
     //GUI::setLight(3,-5,3,5,true,false);
     Objeto *floor = nullptr;
 
-    GUI::drawOrigin(1);
+    //GUI::drawOrigin(1);
 
     GUI::setColor(1,0,0);
-    //GUI::drawFloor();
-
-    desenhaPontosDeControle();
-
-//    for (int i = 0; i < objetos.size(); ++i) {
-//        glPushMatrix();
-//            objetos[i]->desenha();
-//        glPopMatrix();
-
-//        if(objetos[i]->nome() == "chao"){
-//            floor = objetos[i];
-//            floor->shadowVisible() = false;
-//        }
-//    }
+    viewPorts();
 
 
-
-    //-------------------sombra-------------------
-    //definindo a luz que sera usada para gerar a sombra
-    float lightPos[4] = {-1+glutGUI::lx,2+glutGUI::ly,1+glutGUI::lz, pontual};
-    if(floor != nullptr){
-        k = floor->t.y + 0.01;
-    }
-    //GUI::setLight(0,lightPos[0],lightPos[1],lightPos[2],true,false,false,false,pontual);
-    GUI::setLight(0,-1,2,1,true,false,false,false, pontual);
-    //desenhando os objetos projetados
-    glPushMatrix();
-        //matriz p multiplicar tudo por -1
-            //float neg[16] = {
-            //                   -1.0, 0.0, 0.0, 0.0,
-            //                    0.0,-1.0, 0.0, 0.0,
-            //                    0.0, 0.0,-1.0, 0.0,
-            //                    0.0, 0.0, 0.0,-1.0
-            //                };
-            //glMultTransposeMatrixf( neg );
-        //matriz de projecao para gerar sombra no plano y=k
-            GLfloat sombra[4][4];
-            GUI::shadowMatrixYk(sombra,lightPos,k);
-            //GLfloat plano[4] = {0,1,0,-k};
-            //GUI::shadowMatrix(sombra,plano,lightPos);
-            glMultTransposeMatrixf( (GLfloat*)sombra );
-
-        glDisable(GL_LIGHTING);
-        glColor3d(0.0,0.0,0.0);
-        if (drawShadow) {
-            bool aux = glutGUI::draw_eixos;
-            glutGUI::draw_eixos = false;
-            for (int i = 0; i < objetos.size(); ++i) {
-                if(objetos[i]->shadowVisible()){
-                    glPushMatrix();
-                        objetos[i]->desenha();
-                    glPopMatrix();
-                }
-            }
-            glutGUI::draw_eixos = aux;
-        }
-        glEnable(GL_LIGHTING);
-        //glDisable(GL_LIGHTING);
-        //glColor3d(0.0,0.0,0.0);
-        //if (drawShadow) desenhaObjetosComSombra();
-        //glEnable(GL_LIGHTING);
-    glPopMatrix();
-    //-------------------sombra-------------------
 }
 
 void desenha() {
@@ -277,8 +324,9 @@ void desenha() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    glViewport(0, 0, glutGUI::width, glutGUI::height);
+    glLoadIdentity();
     gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
-
     displayInner();
 
     GUI::setColor(clear_color.x, clear_color.y, clear_color.z, 1);
@@ -328,8 +376,6 @@ void desenha() {
     glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
     //glUseProgram(0); // You may want this if using this code in an OpenGL 3+ context where shaders may be bound, but prefer using the GL3+ code.
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-
-
 
     GUI::displayEnd();
     glutPostRedisplay();
@@ -441,6 +487,16 @@ void teclado(unsigned char key, int x, int y) {
         }
         break;
 
+    case 'v':
+        viewports = !viewports;
+        break;
+    case 's':
+        scissored = !scissored;
+        break;
+    case '\\':
+        _3dsviewports = !_3dsviewports;
+        break;
+
     default:
         break;
     }
@@ -459,7 +515,8 @@ int picking( GLint cursorX, GLint cursorY, int w, int h ) {
     //lembrar de nao inicializar a matriz de projecao, para nao ignorar a gluPickMatrix
     GUI::displayInit();
     //só precisa desenhar o que for selecionavel
-    desenhaPontosDeControle();
+    if(!_3dsviewports)
+        desenhaPontosDeControle();
 //fim-de acordo com a implementacao original da funcao display
 
     //retornando o name do objeto (ponto de controle) mais proximo da camera (z minimo! *[matrizes de normalizacao da projecao])
@@ -485,6 +542,20 @@ void mouse(int button, int state, int x, int y) {
 
 int main(int argc, char **argv)
 {
+    _3dsviewportsCameras.push_back(new CameraDistante());
+    _3dsviewportsCameras.push_back(new CameraDistante());
+    _3dsviewportsCameras.push_back(new CameraDistante());
+    _3dsviewportsCameras.push_back(new CameraDistante());
+
+    _3dsviewportsCameras[0]->e.x = 0;
+    _3dsviewportsCameras[0]->e.y = 0;
+    _3dsviewportsCameras[0]->e.z = 10;
+    _3dsviewportsCameras[0]->c.y = 0;
+
+    _3dsviewportsCameras[1]->e.x = 10;
+    _3dsviewportsCameras[1]->e.y = 0;
+    _3dsviewportsCameras[1]->e.z = 0.00001f;
+    _3dsviewportsCameras[1]->c.y = 0;
 
     int n = 5;
     float dist = 1.0;

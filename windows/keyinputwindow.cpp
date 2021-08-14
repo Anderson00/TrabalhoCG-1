@@ -20,6 +20,9 @@ void KeyInputWindow::desenhar()
 
     ImGuiIO& io = ImGui::GetIO();
 
+    this->m_mouseX = io.MousePos.x;
+    this->m_mouseY = io.MousePos.y;
+
     ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::Text("width: %d, height: %d", glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
     ImGui::Separator();
@@ -99,4 +102,14 @@ bool &KeyInputWindow::iskeyboardActionsLocked()
 int &KeyInputWindow::projectionMode()
 {
     return this->m_projectionMode;
+}
+
+float &KeyInputWindow::mouseX()
+{
+    return this->m_mouseX;
+}
+
+float &KeyInputWindow::mouseY()
+{
+    return this->m_mouseY;
 }

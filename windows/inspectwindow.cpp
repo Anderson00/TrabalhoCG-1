@@ -51,6 +51,10 @@ void InspectWindow::desenhar()
             ImGui::DragFloat3("Rotation", rotationOfObject[0], 0.05f, -360.0f, 360.0f);
             ImGui::DragFloat3("Scale", scaleOfObject[0], 0.05f, -50.0f, 50.0f);
             ImGui::Separator();
+
+            float *cores[4] = {&objeto->m_r, &objeto->m_g, &objeto->m_b, &objeto->m_alp};
+            ImGui::ColorPicker3("Cor", cores[0]);
+
         }
     }
 
