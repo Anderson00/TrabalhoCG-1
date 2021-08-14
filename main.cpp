@@ -51,12 +51,15 @@ Objeto *chaoObj = nullptr;
 bool viewports = false;
 bool scissored = false;
 bool _3dsviewports = false;
+std::vector<Camera*> _3dsviewportsCameras;
+
 
 void cenario();
 void desenhaPontosDeControle();
 
 //visao de duas cameras (duas viewports), viewport auxiliar sobrepondo a principal
 void viewPorts() {
+    static Camera *cameraPrincipal = glutGUI::cam;
     float width = glutGUI::width;
     float height = glutGUI::height;
 
@@ -67,27 +70,48 @@ void viewPorts() {
             gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
                 cenario();
     }else{
+        glBegin(GL_LINE);
+
+
+        if((inputWindow.mouseX() >= 0 && inputWindow.mouseX() <= width/2) &&
+           (inputWindow.mouseY() >= 0 && inputWindow.mouseY() <= height/2)){
+            glutGUI::cam = _3dsviewportsCameras[0];
+            _3dsviewportsCameras[0]->c.x = _3dsviewportsCameras[0]->e.x;
+            _3dsviewportsCameras[0]->c.y = _3dsviewportsCameras[0]->e.y;
+        }else if((inputWindow.mouseX() >= width/2 && inputWindow.mouseX() <= width) &&
+                 (inputWindow.mouseY() >= 0 && inputWindow.mouseY() <= height/2)){
+            glutGUI::cam = _3dsviewportsCameras[1];
+            _3dsviewportsCameras[1]->c.y = _3dsviewportsCameras[1]->e.y;
+            _3dsviewportsCameras[1]->c.z = _3dsviewportsCameras[1]->e.z;
+        }else{
+            glutGUI::cam = cameraPrincipal;
+        }
+
+        _3dsviewportsCameras[3]->e.x = 0;
+        _3dsviewportsCameras[3]->e.y = 10;
+        _3dsviewportsCameras[3]->e.z = 0.00001f;
         //Superior esquerdo
         glViewport(0, height/2, width/2, height/2);
             glLoadIdentity();
-            gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+            gluLookAt(_3dsviewportsCameras[0]->e.x, _3dsviewportsCameras[0]->e.y, _3dsviewportsCameras[0]->e.z, _3dsviewportsCameras[0]->c.x, _3dsviewportsCameras[0]->c.y, _3dsviewportsCameras[0]->c.z, _3dsviewportsCameras[0]->u.x, _3dsviewportsCameras[0]->u.y, _3dsviewportsCameras[0]->u.z);
                 cenario();
-        //Superior direito
+        //Inferior Esquerdo
         glViewport(0, 0, width/2, height/2);
             glLoadIdentity();
-            gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+            //gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+            gluLookAt(cameraPrincipal->e.x,cameraPrincipal->e.y,cameraPrincipal->e.z, cameraPrincipal->c.x,cameraPrincipal->c.y,cameraPrincipal->c.z, cameraPrincipal->u.x,cameraPrincipal->u.y,cameraPrincipal->u.z);
                 cenario();
 
-       //Inferior Esquerdo
+       //Superior Direito
         glViewport(width/2, height/2, width/2, height/2);
             glLoadIdentity();
-            gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+            gluLookAt(_3dsviewportsCameras[1]->e.x, _3dsviewportsCameras[1]->e.y, _3dsviewportsCameras[1]->e.z, _3dsviewportsCameras[1]->c.x, _3dsviewportsCameras[1]->c.y, _3dsviewportsCameras[1]->c.z, _3dsviewportsCameras[1]->u.x, _3dsviewportsCameras[1]->u.y, _3dsviewportsCameras[1]->u.z);
                 cenario();
 
-        //Inferior Esquerdo
+        //Inferior Direito
          glViewport(width/2, 0, width/2, height/2);
              glLoadIdentity();
-             gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
+             gluLookAt(_3dsviewportsCameras[3]->e.x, _3dsviewportsCameras[3]->e.y, _3dsviewportsCameras[3]->e.z, _3dsviewportsCameras[3]->c.x, _3dsviewportsCameras[3]->c.y, _3dsviewportsCameras[3]->c.z, _3dsviewportsCameras[3]->u.x, _3dsviewportsCameras[3]->u.y, _3dsviewportsCameras[3]->u.z);
                  cenario();
     }
 
@@ -172,10 +196,6 @@ void cenario() {
             glutGUI::draw_eixos = aux;
         }
         glEnable(GL_LIGHTING);
-        //glDisable(GL_LIGHTING);
-        //glColor3d(0.0,0.0,0.0);
-        //if (drawShadow) desenhaObjetosComSombra();
-        //glEnable(GL_LIGHTING);
     glPopMatrix();
     //-------------------sombra-------------------
 }
@@ -283,9 +303,6 @@ void displayInner() {
     //GUI::drawOrigin(1);
 
     GUI::setColor(1,0,0);
-    //GUI::drawFloor();
-
-    //desenhaPontosDeControle();
     viewPorts();
 
 
@@ -498,7 +515,8 @@ int picking( GLint cursorX, GLint cursorY, int w, int h ) {
     //lembrar de nao inicializar a matriz de projecao, para nao ignorar a gluPickMatrix
     GUI::displayInit();
     //só precisa desenhar o que for selecionavel
-    desenhaPontosDeControle();
+    if(!_3dsviewports)
+        desenhaPontosDeControle();
 //fim-de acordo com a implementacao original da funcao display
 
     //retornando o name do objeto (ponto de controle) mais proximo da camera (z minimo! *[matrizes de normalizacao da projecao])
@@ -524,6 +542,20 @@ void mouse(int button, int state, int x, int y) {
 
 int main(int argc, char **argv)
 {
+    _3dsviewportsCameras.push_back(new CameraDistante());
+    _3dsviewportsCameras.push_back(new CameraDistante());
+    _3dsviewportsCameras.push_back(new CameraDistante());
+    _3dsviewportsCameras.push_back(new CameraDistante());
+
+    _3dsviewportsCameras[0]->e.x = 0;
+    _3dsviewportsCameras[0]->e.y = 0;
+    _3dsviewportsCameras[0]->e.z = 10;
+    _3dsviewportsCameras[0]->c.y = 0;
+
+    _3dsviewportsCameras[1]->e.x = 10;
+    _3dsviewportsCameras[1]->e.y = 0;
+    _3dsviewportsCameras[1]->e.z = 0.00001f;
+    _3dsviewportsCameras[1]->c.y = 0;
 
     int n = 5;
     float dist = 1.0;

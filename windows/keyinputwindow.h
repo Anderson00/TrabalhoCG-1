@@ -21,6 +21,9 @@ public:
 
     int &projectionMode();
 
+    float &mouseX();
+    float &mouseY();
+
 private:
     unsigned int m_key;
     bool m_inInsertionMode;
@@ -29,6 +32,7 @@ private:
     bool m_inRotationMode;
     bool m_inScaleMode;
     int m_projectionMode = -1;
+    float m_mouseX, m_mouseY;
     const char* m_projectioNames[4] = { "Pespective", "Ortho", "Obliq", "Frust" };
 
     bool m_iskeyboardActionsLocked;
