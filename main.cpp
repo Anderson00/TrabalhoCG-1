@@ -5,6 +5,7 @@ using namespace std;
 //#include <gui.h>
 #include <vector>
 #include <QApplication>
+#include <QTimer>
 
 //imgui includes
 #include "imgui/imgui.h"
@@ -23,9 +24,13 @@ using namespace std;
 #include "windows/hierarchywindow.h"
 #include "windows/inspectwindow.h"
 #include "windows/assetswindow.h"
+#include "windows/bezierwindow.h"
 
 //File
 #include "utils/filecontroller.h"
+
+//Bezier
+#include "utils/bezier.h"
 
 // Our state
 static bool show_demo_window = false;
@@ -36,6 +41,7 @@ HierarchyWindow hierarchyWindow;
 InspectWindow inspectWindow;
 MenuBarWindow menubar;
 AssetsWindow assetsWindow;
+BezierWindow bezierWindow;
 
 vector<Objeto*> &objetos = hierarchyWindow.objetos();
 int &posSelecionado = hierarchyWindow.itemIndiceSelected();
@@ -52,6 +58,8 @@ bool viewports = false;
 bool scissored = false;
 bool _3dsviewports = false;
 std::vector<Camera*> _3dsviewportsCameras;
+
+QTimer timer;
 
 
 void cenario();
@@ -70,8 +78,6 @@ void viewPorts() {
             gluLookAt(glutGUI::cam->e.x,glutGUI::cam->e.y,glutGUI::cam->e.z, glutGUI::cam->c.x,glutGUI::cam->c.y,glutGUI::cam->c.z, glutGUI::cam->u.x,glutGUI::cam->u.y,glutGUI::cam->u.z);
                 cenario();
     }else{
-        glBegin(GL_LINE);
-
 
         if((inputWindow.mouseX() >= 0 && inputWindow.mouseX() <= width/2) &&
            (inputWindow.mouseY() >= 0 && inputWindow.mouseY() <= height/2)){
@@ -155,6 +161,41 @@ void cenario() {
     Desenha::drawGrid( 5, 0, 5, 2 );
 
     desenhaPontosDeControle();
+
+    if(inputWindow.bezierShow()){
+        displayBezier();
+
+        if(posSelecionado >= 0 && posSelecionado < objetos.size()){
+            static float t = 0.0f;
+            static bool tInvert = false;
+            static int oldTimeSinceStart = 0;
+            static int waitTime = 0;
+            //for(float t=0;t<1;t+=0.02f)
+            //{
+                int timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
+                int deltaTime = timeSinceStart - oldTimeSinceStart;
+                waitTime += deltaTime;
+                oldTimeSinceStart = timeSinceStart;
+
+                if(waitTime >= 20){
+                    waitTime = 0;
+                    float* p = bezier(t,p0,p1,p2,p3);
+                    objetos[posSelecionado]->t.x = p[0];
+                    //objetos[posSelecionado]->t.z
+                    objetos[posSelecionado]->t.z = p[1];
+                    free(p);
+
+                    t += ((tInvert)? -1 : 1)*0.001f;
+                    if(t >= 1){
+                        tInvert = true;
+                    }else if(t <= 0){
+                        tInvert = false;
+                    }
+                }
+
+            //}
+        }
+    }
 
     //-------------------sombra-------------------
     //definindo a luz que sera usada para gerar a sombra
@@ -247,6 +288,9 @@ void imgui_display()
     hierarchyWindow.desenhar();
     inspectWindow.desenhar();
     assetsWindow.desenhar();
+
+    if(inputWindow.bezierShow())
+        bezierWindow.desenhar();
 
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
     {
@@ -461,7 +505,7 @@ void teclado(unsigned char key, int x, int y) {
             objetos.push_back( new Carro() );
         }
         break;
-    case 'C':
+    case 'Z':
         if (incluirObjeto) {
             objetos.push_back( new Casa() );
         }
@@ -580,6 +624,13 @@ int main(int argc, char **argv)
 
     menubar.fileController(&controller);
     menubar.hierarchyWindow(&hierarchyWindow);
+
+    bezierWindow.p0 = p0;
+    bezierWindow.p1 = p1;
+    bezierWindow.p2 = p2;
+    bezierWindow.p3 = p3;
+
+    timer.setInterval(1);
 
     QApplication app(argc, argv);
     GUI gui = GUI(800,600,desenha,teclado, mouse);

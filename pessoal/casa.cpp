@@ -101,6 +101,9 @@ void Casa::casa()
 
 void Casa::desenha()
 {
+//    glPolygonMode(GL_FRONT, GL_LINE);
+//    glPolygonMode(GL_BACK, GL_LINE);
+
     glPushMatrix();
         Objeto::desenha(); // T.Rz.Ry.Rx.S. p
 
@@ -112,6 +115,10 @@ void Casa::desenha()
         casa();
 
     glPopMatrix();
+
+    // Turn off wireframe mode
+//    glPolygonMode(GL_FRONT, GL_FILL);
+//    glPolygonMode(GL_BACK, GL_FILL);
 
 //    glPushMatrix();
 //        GUI::glReflectPlaneXZf();

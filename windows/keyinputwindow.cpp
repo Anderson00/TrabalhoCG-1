@@ -44,6 +44,8 @@ void KeyInputWindow::desenhar()
     ImGui::Checkbox("Keyboard Actions Locked", &this->m_iskeyboardActionsLocked);
     ImGui::Separator();
     ImGui::Text("Projections");
+    ImGui::Separator();
+    ImGui::Checkbox("Modo Bezier", &this->bezierShow());
 
     // Simple selection popup
     // (If you want to show the current selection inside the Button itself, you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
@@ -97,6 +99,11 @@ bool &KeyInputWindow::inScaleMode()
 bool &KeyInputWindow::iskeyboardActionsLocked()
 {
     return this->m_iskeyboardActionsLocked;
+}
+
+bool &KeyInputWindow::bezierShow()
+{
+    return this->m_bezierShow;
 }
 
 int &KeyInputWindow::projectionMode()

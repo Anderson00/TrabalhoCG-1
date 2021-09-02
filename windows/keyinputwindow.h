@@ -18,6 +18,7 @@ public:
     bool &inRotationMode();
     bool &inScaleMode();
     bool &iskeyboardActionsLocked();
+    bool &bezierShow();
 
     int &projectionMode();
 
@@ -32,6 +33,7 @@ private:
     bool m_inRotationMode;
     bool m_inScaleMode;
     int m_projectionMode = -1;
+    bool m_bezierShow;
     float m_mouseX, m_mouseY;
     const char* m_projectioNames[4] = { "Pespective", "Ortho", "Obliq", "Frust" };
 
