@@ -35,6 +35,7 @@ SOURCES += main.cpp \
     imgui/examples/imgui_impl_opengl2.cpp \
     utils/filecontroller.cpp \
     windows/assetswindow.cpp \
+    windows/bezierwindow.cpp \
     windows/hierarchywindow.cpp \
     windows/inspectwindow.cpp \
     windows/keyinputwindow.cpp \
@@ -63,8 +64,10 @@ HEADERS += \
     imgui/imgui_draw.h \
     imgui/imgui_widgets.h \
     imgui/examples/imgui_impl_glut.h \
+    utils/bezier.h \
     utils/filecontroller.h \
     windows/assetswindow.h \
+    windows/bezierwindow.h \
     windows/hierarchywindow.h \
     windows/inspectwindow.h \
     windows/keyinputwindow.h \
