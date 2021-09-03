@@ -30,6 +30,14 @@ void BezierWindow::desenhar()
         ImGui::DragFloat2("p(3)", translateOfObject4[0], 0.05f, -50.0f, 50.0f);
         ImGui::Separator();
 
+        float *translateOfObject5[3] = {Tx, Ty, Tz};
+
+        ImGui::DragFloat3("T", translateOfObject5[0], 0.05f, -50.0f, 50.0f);
+
+        ImGui::Separator();
+        ImGui::SliderFloat("Speed", &speed, 0.0f, 1.0f, "%.3f");
+
+
 
     ImGui::End();
 }

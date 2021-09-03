@@ -177,15 +177,15 @@ void cenario() {
                 waitTime += deltaTime;
                 oldTimeSinceStart = timeSinceStart;
 
-                if(waitTime >= 20){
+                if(waitTime >= 2){
                     waitTime = 0;
                     float* p = bezier(t,p0,p1,p2,p3);
-                    objetos[posSelecionado]->t.x = p[0];
-                    //objetos[posSelecionado]->t.z
-                    objetos[posSelecionado]->t.z = p[1];
+                    objetos[posSelecionado]->t.x = p[0] + x;
+                    objetos[posSelecionado]->t.y = y;
+                    objetos[posSelecionado]->t.z = p[1] + z;
                     free(p);
 
-                    t += ((tInvert)? -1 : 1)*0.001f;
+                    t += ((tInvert)? -1 : 1)*bezierWindow.speed/100;
                     if(t >= 1){
                         tInvert = true;
                     }else if(t <= 0){
@@ -629,6 +629,10 @@ int main(int argc, char **argv)
     bezierWindow.p1 = p1;
     bezierWindow.p2 = p2;
     bezierWindow.p3 = p3;
+
+    bezierWindow.Tx = &x;
+    bezierWindow.Ty = &y;
+    bezierWindow.Tz = &z;
 
     timer.setInterval(1);
 

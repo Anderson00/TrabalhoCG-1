@@ -20,6 +20,8 @@ float p2[2];
 float p3[2];
 float tar=4;
 
+float x = 0, y = 0, z = 0;
+
 float* bezier(float t, float* p0,float* p1,float* p2,float* p3)
 {
     float *res = (float*)malloc(sizeof(float) * 2);
@@ -29,6 +31,9 @@ float* bezier(float t, float* p0,float* p1,float* p2,float* p3)
 }
 
 void displayBezier() {
+    glPushMatrix();
+    glTranslated(x,y,z);
+
     glDisable(GL_LIGHTING);
     glColor3f(1,0,0);
     glColor3f(0,1,0);
@@ -59,6 +64,8 @@ void displayBezier() {
 
     glFlush();
     glEnable(GL_LIGHTING);
+
+    glPopMatrix();
 }
 
 #endif // BEZIER_H

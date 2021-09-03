@@ -13,6 +13,9 @@ public:
     BezierWindow();
 
    float *p0, *p1, *p2, *p3;
+   float *Tx, *Ty, *Tz;
+
+   float speed;
 
     void desenhar() override;
 
